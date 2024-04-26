@@ -1080,10 +1080,10 @@ print(result)
 
 5、配置QtDesigner,打开pycharm设置，选择Tools->External Tools,添加一个扩展工具,program 添加anaconda3/bin/Designer
 
-![image-20240426203914350](/Users/sunpeng/Library/Application Support/typora-user-images/image-20240426203914350.png)
+![image-20240426203914350](assets/image-20240426203914350.png)
 
 6、配置.ui文件转换为.py文件，program添加anaconda安装目录下的python,Arguments添加-m PyQt5.uic.pyuic $FileName$ -o $FileNameWithoutExtension$.py Working directory添加$FileDir$
 
-![image-20240426204114398](/Users/sunpeng/Library/Application Support/typora-user-images/image-20240426204114398.png)
+![image-20240426204114398](assets/image-20240426204114398.png)
 
 7、全部配置完毕后可以在External Tools中直接打开QtDesigner,也可以在External Tools中转换ui文件编程py文件
