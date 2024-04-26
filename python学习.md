@@ -1087,3 +1087,9 @@ print(result)
 ![image-20240426204114398](assets/image-20240426204114398.png)
 
 7、全部配置完毕后可以在External Tools中直接打开QtDesigner,也可以在External Tools中转换ui文件编程py文件
+
+
+
+
+
+### 制作一个退出的应用程序

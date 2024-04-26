@@ -21,18 +21,18 @@ class QuitApplication(QMainWindow):
 
         #添加一个button
         self.button = QPushButton('退出应用程序')
-        #将信号与槽关联
+        #将点击信号与槽关联
         self.button.clicked.connect(self.onClick_Button)
 
-        self.status = self.statusBar()
-        self.status.showMessage('只存在5秒的消息', 5000)
-
+        #创建一个水平布局
         layout = QHBoxLayout()
+        #将button添加到布局中
         layout.addWidget(self.button)
-
+        #创建一个主窗口
         mainFrame = QWidget()
+        #将布局设置为主窗口
         mainFrame.setLayout(layout)
-
+        #将主窗口设置到屏幕
         self.setCentralWidget(mainFrame)
 
     def onClick_Button(self):
