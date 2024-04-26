@@ -1,0 +1,94 @@
+关于object
+
+1.所有类都继承object
+
+2.父类泛指子类的类型
+	String name = "wupeiqi";
+	String name = new String("武沛齐");
+
+	Object name = new String("武沛齐");
+
+
+	2.1 数组的类型（常见类型）
+		String[] v1 = {"123","xxx","sdf"};
+		Object[] v1 = {"123",1111,true};
+
+	2.2 自定义类型
+		...
+
+	2.3 父类泛指子类的类型
+
+	2.4 泛指+调用方法
+
+			class Person{
+			    public void showData() {
+			        System.out.println("ROOT");
+			    }
+
+			    public void showName() {
+			        System.out.println("源代码学城");
+			    }
+			}
+
+			class Info extends Person {
+			    public void showName() {
+			        System.out.println("路飞学城");
+			    }
+			}
+
+			public class Demo {
+			    public static void main(String[] args) {
+			        /*
+			        Info v1 = new Info();
+			        v1.showName();
+			        v1.showData();
+			        */
+
+			        // v2.出来都是在Person存在的；
+			        // 调用时，真是自己是那个类的对象，调用本身这个类中的方法。
+			        Person v2 = new Info();
+			        v2.showName();  // 路飞学城
+			        v2.showData();  // ROOT
+
+			        Person v3 = new Person();
+			        v3.showName();  // 源代码
+			        v3.showData();  // ROOT
+			    }
+			}
+
+
+
+
+	2.5 参数的类型
+		注意泛指的情况。
+
+
+					
+			class Person {
+			    public void showData() {
+			        System.out.println("ROOT");
+			    }
+
+			    public void showName() {
+			        System.out.println("源代码学城");
+			    }
+			}
+
+			class Info extends Person {
+			    public void showName() {
+			        System.out.println("路飞学城");
+			    }
+			}
+
+			public class Demo {
+
+			    public static void doRequest(Person obj) {
+			        System.out.println(obj.getClass());
+			        obj.showName();
+			    }
+
+			    public static void main(String[] args) {
+			        doRequest(new Person());
+			        doRequest(new Info());
+			    }
+			}

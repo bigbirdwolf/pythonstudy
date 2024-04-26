@@ -1,0 +1,142 @@
+虚拟环境
+
+---------------------------------------------------------
+目前：
+	pip install requests/bs4/xpath...
+
+	都安装在系统解释器。
+
+C:\Python39
+	python.exe
+	Scripts
+		- pip.exe
+	Lib
+		- random
+		- re
+		- sitepackages
+			- requests==1.5 
+			- bs4
+			- xpath
+
+代码 demo.py
+import re
+import requests
+
+运行：
+	C:\Python39\python.exe  demo.py
+---------------------------------------------------------
+问题1：私活，开发 requests模块 + bs4(20个)
+      C:\Python39\python.exe  s1.py
+      requests==2.1
+      bs4==3.2
+      ...
+
+问题2：
+	- 私活A  requests==1.2   -> 1w  (环境 requests==1.2)
+	- 私活B  requests==1.5   -> 1w  (环境 requests==1.2)
+---------------------------------------------------------
+什么是虚拟环境？拷贝你的python解释器。
+
+C:\Python39（系统）
+	python.exe
+	Scripts
+		- pip.exe
+	Lib
+		- random
+		- re
+		- sitepackages
+			- requests==1.5 
+			- bs4
+			- xpath
+
+D:\x1
+	python.exe
+	Scripts
+		- pip.exe						->       项目A            -> pip freeze > requirements.txt      requests==1.1 ....
+	Lib
+		- 依赖系统解释器
+		- sitepackages
+			- requests==1.1
+
+
+F:\x2
+	python.exe
+	Scripts
+		- pip.exe						->       项目B            -> pip freeze > requirements.txt         requests==1.1 ....
+	Lib
+		- 依赖系统解释器
+		- sitepackages
+			- requests==1.2
+---------------------------------------------------------
+一贯操作和建议
+在创建项目时：
+	- bilibili
+		- venv   ->  隐藏文件
+			python.exe
+			Scripts
+				- pip.exe
+			Lib
+				- random
+				- re
+				- sitepackages
+					- requests==1.5 
+					- bs4
+					- xpath
+		- code.py
+		- xxxx.py
+
+切记，不要去虚拟环境中写代码。
+---------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

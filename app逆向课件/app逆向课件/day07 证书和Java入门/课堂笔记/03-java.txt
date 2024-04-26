@@ -1,0 +1,190 @@
+Java入门基础
+
+1.编程的本质
+	
+	- Python
+		- 安装解释器
+		- 学习语法
+		- 语法编写代码 + 解释器运行
+
+	- Java
+		- 安装解释器/编译器/虚拟机
+		- 学习语法
+		- 语法编写代码 + 运行
+
+2.安装
+	- 关键词：jre、jdk
+		- jre，运行环境。不是开发，软件使用者。例如：jadx
+		- jdk，开发软件。代码执行+导入包+工具+运行
+	- jdk版本 1.8
+
+	- 编写代码
+	- 运行
+		>>>javac Hello.java     生成Java字节码
+		>>>java Hello
+
+3.Inteliji
+
+4.Java语法
+	
+	4.1 文件名+类
+
+		文件名 Hello.java    类名  Hello
+
+
+	4.2 ：和 大括号
+
+		class Info:
+			
+			def ...
+
+	4.3 返回值必须指定类型 或 void
+
+	4.4 参数类型必须指定
+
+	4.5 代码的尾部记得加 ;
+
+	4.6 静态方法
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+5.语法基础
+	...
+
+6.常见数据类型（上篇）
+
+	Python
+
+		str
+			v1 = "root"
+			v2 = "alex"
+
+			v1.upper()
+			v2.lower()
+
+		list
+			v1 = [11,22]
+			v2 = [99,88]
+
+			v1.append(..)
+
+		tuple
+
+		dict
+
+	Java
+
+	------------------------
+	所有的类型=类都继承 object（Java 和 Python全都试用）
+
+
+	数组【容器+指定类型】
+		String[] names = new String[]{"武沛齐", "alex", "eric"};
+		int[] names = new int[]{11,22,33,44};
+
+		感觉数组用处不大？
+		ArrayList
+
+		Python中的列表动态变化？底层实现是基于C语言数组实现。
+			v1 = [11,22,33]
+			v1.append(33)
+			v1.append(44)
+
+	Object类
+		- Java中所有的类都继承Object类（是所有类的父类）
+		- 在java中可以用父类代指子类的对象。
+
+			String name = new String("武沛齐");
+			int v1 = 123;
+			short v2 = 9;
+
+
+			Object name = new String("武沛齐");
+			Object v1 = 123;
+			Object v2 = 9;
+
+		- 重新认识数组
+			String[] names = new String[]{"武沛齐", "alex", "eric"};
+			int[] names = new int[]{11,22,33,44};
+
+
+			Object[] names = {11,22,33,"武沛齐",True};
+
+			Object v1 = names[0];
+			int v2 = (int)names[0];
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+感受：没有实战，总感觉缺点什么？【理解知识点】

@@ -1,0 +1,54 @@
+重载，逆向意义何在？
+
+- Hook，手机上运行得物app，点击登录： login -> load_oaid
+                                       -> Okhttp obj = new Okhttp();
+ 									   -> obj.send_request()
+ 									   ....
+
+ 		hook技术将手机上的send_request更换成我们自己的方法。
+
+ 			package com.nb.demo
+	 		public class Okhttp{
+
+	 			public void send_request(){
+	 				...
+	 			}
+
+	 			public void send_request(int v1){
+	 				...
+	 			}
+
+	 			public void send_request(int v1,int v2){
+	 				...
+	 			}
+	 		}
+
+	 	var Okhttp = Java.use("com.nb.demo.Okhttp");
+	 	Okhttp.send_request = function(){
+	 		console.log(666);
+	 		this.send_request()
+	 	}
+
+- hook 重载，默认报错
+	
+	var Okhttp = Java.use("com.nb.demo.Okhttp");
+ 	Okhttp.send_request.overload(int,int) = function(v1,v2){
+ 		console.log(666);
+ 		this.send_request(v1,v2)
+ 	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+- 混乱
+	
+

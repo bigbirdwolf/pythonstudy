@@ -1,0 +1,30 @@
+缓存机制
+
+public DeviceUtils{
+	public static String oaid =null;
+
+
+	public String getOaid(){
+		if(DeviceUtils.oaid){
+			return DeviceUtils.oaid;
+		}
+
+		// 执行某个特殊的算法
+		// md5加密
+		// 返回字符串 
+		DeviceUtils.oaid = 返回字符串 ;
+		return 返回字符串 ;
+	}
+
+}
+
+DeviceUtils obj= new DeviceUtils();
+obj.getOaid()
+
+requests.post(
+	url="?",
+	json={
+		"oid":obj.getOaid()
+	}
+
+)

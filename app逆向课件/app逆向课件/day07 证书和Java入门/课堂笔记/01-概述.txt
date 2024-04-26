@@ -1,0 +1,18 @@
+day07 https证书和Java入门基础
+
+
+内容：
+	- day05，app逆向入门
+			-      臧航，http请求抓包
+			-    爱安丘，https证书+请求抓包
+			- 油联合伙人，https证书+请求抓包+apk反编译+分析java得到算法
+
+			掌握：
+				安卓7以下设备如何抓http和https包。
+				反编译apk（jadx工具）+ 读懂Java代码
+
+	- day06，pixel系列（刷机+root+证书）
+
+	- day07
+		- https证书（小米手机），抓包。
+		- Java入门基础，分析反编译后的java代码。

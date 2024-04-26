@@ -1,0 +1,62 @@
+应用场景：hook app的版本信息（拼多多）apk文件。
+
+- app启动时，各种数据加载到内存（类和对象）
+- 某个特殊类 PackgeInfo
+	
+	package android.inner.demo
+	public class PackgeInfo{
+		public static String brand = "小米;
+		public static String model = "8A";
+
+		public PackgeInfo(int code,String name){
+			this.versionCode = code
+			this.packageName = name
+		}
+	}
+
+	class Manager{
+		public static PackgeInfo Info;
+	}
+
+	内部实例化类的对象 
+		...
+		PackgeInfo obj = new PackgeInfo(98870,"拼多多") 。。。。
+		Manager.info = obj;
+
+- 获取内存中brand的值？ 
+	var PackgeInfo = Java.use("android.inner.demo.PackgeInfo");
+	PackgeInfo.brand
+
+
+- versionCode的值，需要想办法获取到对象才可以。
+	var Manager = Java.use("android.inner.demo.Manager");
+	Manager.Info.versionCode
+
+
+- 注意事项
+	public class PackgeInfo{
+		public static String brand;
+		public static String model;
+
+		public PackgeInfo(int code,String name){
+			this.versionCode = code
+			this.packageName = name
+		}
+	}
+
+	内部实例化类的对象 
+		...
+		PackgeInfo.brand = ?
+		PackgeInfo.model = ?
+		PackgeInfo obj = new PackgeInfo(98870,"拼多多") 。。。。
+		Manager.info = obj;
+
+	一定要等到内存中已经有了或已经创建了，才能通过Hook。。
+
+
+
+
+
+
+
+

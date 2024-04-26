@@ -1,0 +1,58 @@
+class Person {
+
+    private String name;
+
+    public Person() {
+        this.name = "eric";
+    }
+
+
+    public void setName(String data){
+        this.name = data;
+    }
+
+    public String getName(){
+        return this.name;
+    }
+}
+
+
+Person obj = new Person();
+obj.getName()
+obj.setName("武沛齐")
+
+-----------------------------------
+
+class Person {
+    private String name;
+
+    public void setName(String data){
+        this.name = data;
+    }
+
+    public String getName(){
+        return this.name;
+    }
+}
+
+
+Person obj = new Person();
+
+
+
+obj.getName();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,40 @@
+interface IMessage {
+	
+	public void getInfo();
+
+	public void genUdid();
+}
+
+class WeChat implements IMessage{
+	public void getInfo(){
+
+	}
+
+	public void genUdid(){
+
+	}
+
+}
+
+public class Base{
+
+	public static void run(IMessage v1){
+		v1.getInfo();
+	}
+
+}
+
+
+你怎么办？
+	- 搜索接口名字  `IMessage`    ->   implements IMessage   =>  不完整
+	- 搜索方法名    `getInfo`    ->    定义方法
+	- Hoo run方法
+		Base.run = function(v1){
+			console.log(v1); # 类实例化的对象
+		}
+	- Hoo run方法+调用栈（具体传参是什么对象）
+
+
+
+
+

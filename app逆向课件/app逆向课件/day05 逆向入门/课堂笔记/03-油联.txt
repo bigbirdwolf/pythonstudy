@@ -1,0 +1,81 @@
+油联合伙人
+
+1.安装
+	
+2.抓包+分析
+	请求体：
+		- password加密
+			123456     e10adc3949ba59abbe56e057f20f883e
+	请求头：
+		- X-sign
+			...
+
+3.找位置
+	- JS逆向，谷歌浏览器关键字搜索 
+	- 获取安卓app的代码
+		- 获取apk安装包（本质压缩包，里面包含dex文件）   Java代码 -> 编译  -> dex文件
+		- jadx工具，反编译工具
+		- 关键字索引，关键字进行搜索Java，分析Java代码
+
+	3.1 获取apk
+
+	3.2 jadx工具
+		- 安装jre，推荐安装jdk
+		- jadx免安装（压缩包）下载  + 解压
+		- 搜索
+
+		其他反编译工具：JEB、GDA（免费、收费）
+
+
+	3.3 关键字
+
+		password  "password"    &password=
+		phone     "password"    ...
+
+		/app/api/v1/partnerLogin/login
+		/partnerLogin/login
+
+4.逆向
+	- password
+	- x-sign
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+想要逆向找到算法：
+	- 懂Java，看的懂，会分析 + 校验
+	- 安卓开发，retrofit 发送网络请求

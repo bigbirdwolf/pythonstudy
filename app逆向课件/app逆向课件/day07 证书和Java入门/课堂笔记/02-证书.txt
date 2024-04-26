@@ -1,0 +1,86 @@
+https证书
+
+1.手机root
+	- FastBoot刷Magisk（无法解锁system分区）【推荐】
+	- 第三方Rec twrp刷Magisk [可以解锁system分区]（第三方rec更新不及时，有些机型会不支持）
+
+2.https证书
+	 对于安卓7以下，证书安装在用户级别。
+	对于安卓7及以上，证书安装在系统级别。
+
+	- ROOT+未解锁system分区【推荐】
+		- 手机安装Magisk面具
+		- 在面具中安装move cert模块
+		- 在手机中安装用户证书
+		- 重启手机，自动移动到 /system/.../cert/证书
+
+	- ROOT+已解锁system分区
+		- 电脑：charles中下载安装文件 .pem 
+		- 电脑：利用openssl工具对 .pem  进行处理 证书文件
+		- 将 证书文件 上传到手机上 /sdcard/Download/
+		- 安装文件管理器
+			- 复制 /sdcard/Download/证书 
+			- /system/目录 【只读】 -> 【可写】
+			- 粘贴到 /system/.../cert/证书
+			- /system/目录 【可写】 -> 【只读】
+
+3.ROOT+未解锁system分区【推荐】
+	- 下载move cert模块（zip文件） + 上传手机
+		>>>adb push  D:\move.zip  /sdcard/Download/
+	- 打开面具magisk
+	- 安装move cert模块（zip文件）
+
+	- 安装charles证书（用户级别）【爱安丘】
+		- 启动charles  IP:端口
+		- 手机系统代理 
+		- 输入charles下载证书
+
+	- 手机重启，用户级别证书->系统级别
+
+4.ROOT+已解锁system分区（了解）
+	- charles证书下载电脑本地 pem 文件
+	- 安装openssl工具 + 配置环境变量
+
+	- openssl工具对 pem文件 处理
+		>>>D:
+		>>>openssl  x509 -subject_hash_old -in charles-ssl-proxying-certificate.pem
+		>>>生成 29348ce7
+
+		把 charles-ssl-proxying-certificate.pem  修改成  29348ce7.0
+
+
+	- 将 29348ce7.0 文件放到 /system/etc/security/cacerts/ 下
+		- 上传 29348ce7.0 手机 /sdcard/Download/
+		- 打开资源管理器
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+功能的使用：
+	- day05案例：基于真机实现一遍  or  车智赢、B站、京东
+	- 封存，后续再来使用。
+	

@@ -1,0 +1,97 @@
+面向对象相关
+
+
+1.Java中只能用面向对象 vs Python函数+面向对象
+  
+
+2.类和对象
+
+
+3.重载
+
+
+4.静态成员
+	
+
+5.继承
+	- 继承+执行方法（对象到底是谁）
+	- 父类可以泛指子类对象
+	- 支持单继承
+
+
+6.接口
+
+	特点：
+		- 约束实现接口的类，必须要有指定的成员
+		- 接口泛指实现其的类，实例化的对象
+
+	应用场景：
+		...
+
+
+
+7.抽象
+
+
+8.属性
+
+
+9.包+修饰符
+
+	src
+	├── Hello.java
+	└── utils
+	    └── Helper.java
+	    └── Db.java
+
+
+
+	import utils.Helper;
+	import utils.Db;
+
+	// hello.java
+
+	class MyHelper extends Helper{
+		public void xxxx(){
+			getInfo2();
+		}
+	}
+	public class Hello {
+
+	    public static void main(String[] args) {
+	    	 String data = Helper.getInfo();
+        	 System.out.println(data);
+        	 ...
+	    }
+
+	}
+
+	// helper.java
+	package utils;
+
+	public class Helper {
+	    public static String getInfo() {
+	    	getInfo2();
+	        return "哈哈哈";
+	    }
+
+	    static String getInfo2() {
+	        return "哈哈哈";
+	    }
+	}
+
+	// Db.java
+	package utils;
+
+	public class Db {
+	    public static String getDb() {
+	        return "哈哈哈";
+	    }
+	}
+
+
+
+
+
+
+
