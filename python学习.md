@@ -1146,3 +1146,267 @@ if __name__ == '__main__':
     sys.exit(app.exec_())
 ```
 
+
+
+
+
+### QLabel控件
+
+```python
+import sys
+from PyQt5.QtWidgets import QApplication, QLabel, QMainWindow,QVBoxLayout,QWidget
+from PyQt5.QtGui import QPalette,QPixmap
+from PyQt5.QtCore import Qt
+
+class MainWindow(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.initUI()
+
+    def initUI(self):
+        label1 = QLabel(self)
+        label2 = QLabel(self)
+        label3 = QLabel(self)
+        label4 = QLabel(self)
+
+        label1.setText("<font color='yellow'>这是一个文本标签.</font>")
+        label1.setAutoFillBackground(True)
+        palette = QPalette() #创建一个调色板
+        palette.setColor(QPalette.Window, Qt.blue) #设置背景颜色
+        label1.setPalette(palette)
+        label1.setAlignment(Qt.AlignCenter) #文本居中
+
+        label2.setText("<a href='http://www.baidu.com'>这是一个链接标签.</a>")
+
+        label3.setAlignment(Qt.AlignCenter)
+        label3.setToolTip("这是一个图片标签") #设置提示信息
+        label3.setPixmap(QPixmap("./images/down.jpeg"))
+
+        label4.setOpenExternalLinks(True) #如果设置为True，则点击链接时会打开浏览器,否则只会发出信号
+        label4.setText("<a href='https://item.jd.com/10000000000.html'>感谢关注京东商城！</a>")
+
+        label4.setAlignment(Qt.AlignRight)
+
+        label4.setToolTip("这是一个超级连接")
+
+        vbox = QVBoxLayout()
+        vbox.addWidget(label1)
+        vbox.addWidget(label2)
+        vbox.addWidget(label3)
+        vbox.addWidget(label4)
+
+        label2.linkHovered.connect(self.linkHovered) #绑定鼠标滑过事件
+        label4.linkActivated.connect(self.linkClicked) #绑定单击事件
+
+        self.setLayout(vbox)
+        self.setWindowTitle("QLabelDemo")
+
+    def linkHovered(self, link):
+        print("当鼠标滑过label2标签时，触发事件")
+
+    def linkClicked(self, link):
+        print("当label4标签被点击时，触发事件")
+
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    main = MainWindow()
+    main.show()
+    sys.exit(app.exec_())
+```
+
+
+
+
+
+### QLabel与伙伴控件
+
+```
+'''
+QLabel与伙伴控件
+
+mainLayout.addWidget(控件对象,行号,列号,行跨度,列跨度)
+'''
+
+
+from PyQt5.QtWidgets import *
+import sys
+
+class QlabelBuddy(QDialog): # 继承QDialog对话框类
+    def __init__(self):
+        super().__init__()
+        self.initUI()
+
+    def initUI(self):
+        self.setWindowTitle('QLabel与伙伴控件')
+
+        nameLabel = QLabel('&Name',self)
+        nameLineEdit = QLineEdit(self)
+
+        nameLabel.setBuddy(nameLineEdit) # 设置伙伴控件
+
+        passwordLabel = QLabel('&Password', self)
+        passwpordLineEdit = QLineEdit(self)
+
+        passwordLabel.setBuddy(passwpordLineEdit)  # 设置伙伴控件
+
+        btnOkButton = QPushButton('&OK')
+        btnCancel = QPushButton('&Cancel')
+
+        mainLayout = QGridLayout(self)
+        mainLayout.addWidget(nameLabel,0,0)
+        mainLayout.addWidget(nameLineEdit,0,1,1,2)
+
+        mainLayout.addWidget(passwpordLineEdit,1,1,1,2)
+        mainLayout.addWidget(passwordLabel,1,0)
+
+        mainLayout.addWidget(btnOkButton,2,1)
+        mainLayout.addWidget(btnCancel,2,2)
+
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    main = QlabelBuddy()
+    main.show()
+    sys.exit(app.exec_())
+```
+
+
+
+
+
+### QLineEdit控件与回显模式
+
+```
+'''
+
+QLineEdit控件与回显模式
+
+基本功能:输入单行的文本
+
+EchoMode属性:用于设置QLineEdit控件的回显模式。
+
+QLineEdit控件的回显模式有以下几种:
+
+1. Normal:正常模式，即输入的文本显示在控件中。
+
+2. NoEcho:不回显模式，即输入的文本不显示在控件中。
+
+3. Password:密码模式，即输入的文本显示为星号。
+
+4. PasswordEchoOnEdit:编辑时显示密码模式，即输入的文本显示为星号，但在编辑结束后才显示输入的文本。
+
+
+setPlaceholderText()方法:设置控件的提示文本。
+
+setEchoMode()方法:设置控件的回显模式。
+
+代码示例:
+'''
+
+import sys
+from PyQt5.QtWidgets import (QApplication,
+                             QLineEdit,
+                             QPushButton,
+                             QVBoxLayout,
+                             QFormLayout,
+                             QWidget)
+
+class QLineEditEchoMode(QWidget):
+    def __init__(self):
+        super(QLineEditEchoMode, self).__init__()
+        self.initUI()
+
+    def initUI(self):
+        self.setWindowTitle('QLineEdit EchoMode')
+
+        formLayout = QFormLayout()
+        normalLineEdit = QLineEdit()
+        noEchoLineEdit = QLineEdit()
+        passwordLineEdit = QLineEdit()
+        passwordEchoOnEditLineEdit = QLineEdit()
+
+        formLayout.addRow('Normal', normalLineEdit)
+        formLayout.addRow('NoEcho', noEchoLineEdit)
+        formLayout.addRow('Password', passwordLineEdit)
+        formLayout.addRow('PasswordEchoOnEdit', passwordEchoOnEditLineEdit)
+
+        normalLineEdit.setPlaceholderText('Normal')
+        noEchoLineEdit.setPlaceholderText('NoEcho')
+        passwordLineEdit.setPlaceholderText('Password')
+        passwordLineEdit.setPlaceholderText('PasswordEchoOnEdit')
+
+        normalLineEdit.setEchoMode(QLineEdit.Normal)
+        noEchoLineEdit.setEchoMode(QLineEdit.NoEcho)
+        passwordLineEdit.setEchoMode(QLineEdit.Password)
+        passwordEchoOnEditLineEdit.setEchoMode(QLineEdit.PasswordEchoOnEdit)
+
+        self.setLayout(formLayout)
+
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    ex = QLineEditEchoMode()
+    ex.show()
+    sys.exit(app.exec_())
+```
+
+
+
+
+
+### QLineEdit输入校验
+
+```
+'''
+
+限制QlineEdit输入的字符, 例如只能输入数字、字母、汉字等。
+
+'''
+
+
+from PyQt5.QtWidgets import * # 导入PyQt5模块
+from PyQt5.QtGui import QIntValidator,QDoubleValidator,QRegExpValidator # 导入验证器模块
+from PyQt5.QtCore import QRegExp # 导入正则表达式模块
+
+class QLineEditValidator(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.initUI()
+
+    def initUI(self):
+        self.setWindowTitle('校验器')
+
+        formLayout = QFormLayout() # 创建表单布局
+
+        lineEditInt = QLineEdit() # 创建整数输入框
+        lineEditDouble = QLineEdit() # 创建浮点数输入框
+        lineEditRegex = QLineEdit() # 创建正则表达式输入框
+
+        formLayout.addRow('整数输入框', lineEditInt) # 添加到表单布局
+        formLayout.addRow('浮点数输入框', lineEditDouble)
+        formLayout.addRow('正则表达式输入框', lineEditRegex)
+
+        intValidator = QIntValidator(); # 创建整数验证器
+        intValidator.setRange(1,99)
+
+        doubleValidator = QDoubleValidator(); # 创建浮点数验证器
+        doubleValidator.setRange(-99.99,99.99)
+        doubleValidator.setNotation(QDoubleValidator.StandardNotation) # 设置浮点数显示格式
+        doubleValidator.setDecimals(2) # 设置浮点数精度
+
+
+        regexValidator = QRegExpValidator(QRegExp('[a-zA-Z0-9]+$')); # 创建正则表达式验证器
+
+        lineEditInt.setValidator(intValidator) # 设置整数输入框的验证器
+        lineEditDouble.setValidator(doubleValidator) # 设置浮点数输入框的验证器
+        lineEditRegex.setValidator(regexValidator) # 设置正则表达式输入框的验证器
+
+        self.setLayout(formLayout) # 设置布局
+
+if __name__ == '__main__':
+    app = QApplication([])
+    ex = QLineEditValidator()
+    ex.show()
+    app.exec_()
+```
