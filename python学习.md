@@ -1094,7 +1094,7 @@ print(result)
 
 ### 制作一个退出的应用程序
 
-```
+```python
 import sys
 
 from PyQt5.QtGui import QIcon
@@ -1145,3 +1145,4 @@ if __name__ == '__main__':
     main.show()
     sys.exit(app.exec_())
 ```
+
