@@ -1806,3 +1806,365 @@ if __name__ == '__main__':
 ```
 
 在这个示例中，我们使用lambda表达式传递了带参数的信号。当按钮被点击时，lambda表达式将调用槽函数`on_button_clicked`，并传递参数'Hello'。
+
+
+
+### QRadioButton控件详解
+
+在PyQt中，QRadioButton是用于在GUI中显示单选选项的部件。用户可以从一组单选按钮中选择一个选项。每个单选按钮可以在同一个组中，以便只能选择其中一个。
+
+以下是一个简单的示例，演示如何在PyQt中使用QRadioButton：
+
+```python
+import sys
+from PyQt5.QtWidgets import QApplication, QWidget, QRadioButton, QVBoxLayout
+
+class MyWidget(QWidget):
+    def __init__(self):
+        super().__init__()
+
+        self.initUI()
+
+    def initUI(self):
+        self.setWindowTitle('QRadioButton Example')
+
+        # 创建单选按钮
+        self.radio1 = QRadioButton('Option 1', self)
+        self.radio2 = QRadioButton('Option 2', self)
+        self.radio3 = QRadioButton('Option 3', self)
+
+        # 将单选按钮添加到垂直布局
+        vbox = QVBoxLayout()
+        vbox.addWidget(self.radio1)
+        vbox.addWidget(self.radio2)
+        vbox.addWidget(self.radio3)
+
+        # 使用垂直布局作为主布局
+        self.setLayout(vbox)
+
+        # 为单选按钮添加信号槽连接
+        self.radio1.toggled.connect(self.on_radio_button_toggled)
+        self.radio2.toggled.connect(self.on_radio_button_toggled)
+        self.radio3.toggled.connect(self.on_radio_button_toggled)
+
+    def on_radio_button_toggled(self):
+        sender = self.sender()
+        if sender.isChecked():
+            print(sender.text() + " is selected")
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    widget = MyWidget()
+    widget.show()
+    sys.exit(app.exec_())
+```
+
+在这个示例中，我们创建了三个单选按钮，并将它们放在一个垂直布局中。然后，我们连接了每个单选按钮的`toggled`信号到一个槽函数`on_radio_button_toggled`。当其中一个单选按钮被选中时，会调用槽函数来显示所选选项。
+
+
+
+### QCheckBox详细使用
+
+PyQt中Check的三种状态
+
+| Constant               | Value | Description                                                  |
+| ---------------------- | ----- | ------------------------------------------------------------ |
+| `Qt::Unchecked`        | `0`   | The item is unchecked.                                       |
+| `Qt::PartiallyChecked` | `1`   | The item is partially checked. Items in hierarchical models may be partially checked if some, but not all, of their children are checked. |
+| `Qt::Checked`          | `2`   | The item is checked.                                         |
+
+在 PyQt 中，QCheckBox 的状态有三个可能的值，分别是 Qt.Unchecked、Qt.PartiallyChecked 和 Qt.Checked。其中，Qt.PartiallyChecked 表示复选框的状态为部分选中。
+
+下面是一个简单的示例，演示了如何在 PyQt 中使用 QCheckBox 的 `stateChanged` 信号来检测复选框的部分选中状态：
+
+```python
+import sys
+from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QCheckBox
+from PyQt5.QtCore import Qt
+
+class MyWidget(QWidget):
+    def __init__(self):
+        super().__init__()
+
+        self.initUI()
+
+    def initUI(self):
+        self.setWindowTitle('QCheckBox PartiallyChecked Example')
+
+        # 创建一个垂直布局
+        vbox = QVBoxLayout()
+
+        # 创建复选框
+        self.checkbox = QCheckBox('Partially Checked', self)
+        self.checkbox.setTristate(True)  # 允许部分选中状态
+        self.checkbox.setCheckState(Qt.PartiallyChecked)  # 默认部分选中状态
+        self.checkbox.stateChanged.connect(self.on_checkbox_stateChanged)
+
+        # 将复选框添加到垂直布局
+        vbox.addWidget(self.checkbox)
+
+        # 应用垂直布局
+        self.setLayout(vbox)
+
+    def on_checkbox_stateChanged(self, state):
+        if state == Qt.PartiallyChecked:
+            print('Checkbox is partially checked')
+        elif state == Qt.Checked:
+            print('Checkbox is checked')
+        else:
+            print('Checkbox is unchecked')
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    widget = MyWidget()
+    widget.show()
+    sys.exit(app.exec_())
+```
+
+在这个示例中，我们创建了一个处于部分选中状态的 QCheckBox，并将其状态打印在控制台中。
+
+
+
+
+
+### QComboBox详细使用
+
+下面是一个使用PyQt中的QComboBox的详细示例，展示了如何创建和使用QComboBox，并处理其信号：
+
+```python
+import sys
+from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel, QComboBox
+
+class MyWidget(QWidget):
+    def __init__(self):
+        super().__init__()
+
+        self.initUI()
+
+    def initUI(self):
+        self.setWindowTitle('QComboBox Example')
+
+        # 创建一个垂直布局
+        vbox = QVBoxLayout()
+
+        # 创建一个标签用于显示选择的文字
+        self.label = QLabel('No selection', self)
+        vbox.addWidget(self.label)
+
+        # 创建一个下拉选择框
+        self.combobox = QComboBox(self)
+        self.combobox.addItems(['Option 1', 'Option 2', 'Option 3'])
+        self.combobox.currentIndexChanged.connect(self.on_combobox_currentIndexChanged)
+        vbox.addWidget(self.combobox)
+
+        # 应用布局
+        self.setLayout(vbox)
+
+    def on_combobox_currentIndexChanged(self, index):
+        selected_text = self.combobox.currentText()
+        self.label.setText(f'Selected: {selected_text}')
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    widget = MyWidget()
+    widget.show()
+    sys.exit(app.exec_())
+```
+
+在此示例中，我们创建了一个窗口，其中包含一个从QComboBox显示的下拉选择框，并显示所选项的文本的QLabel。每当下拉选择框中的选项更改时，我们将打印所选项的文本。
+
+### QSlider详细使用
+
+| enum | **[TickPosition](http://127.0.0.1:53224/qt_5/doc.qt.io/qt-5/qslider.html#TickPosition-enum)** { NoTicks, TicksBothSides, TicksAbove, TicksBelow, TicksLeft, TicksRight } |
+| ---- | ------------------------------------------------------------ |
+|      |                                                              |
+
+| Constant                  | Value        | Description                                           |
+| ------------------------- | ------------ | ----------------------------------------------------- |
+| `QSlider::NoTicks`        | `0`          | Do not draw any tick marks.                           |
+| `QSlider::TicksBothSides` | `3`          | Draw tick marks on both sides of the groove.          |
+| `QSlider::TicksAbove`     | `1`          | Draw tick marks above the (horizontal) slider         |
+| `QSlider::TicksBelow`     | `2`          | Draw tick marks below the (horizontal) slider         |
+| `QSlider::TicksLeft`      | `TicksAbove` | Draw tick marks to the left of the (vertical) slider  |
+| `QSlider::TicksRight`     | `TicksBelow` | Draw tick marks to the right of the (vertical) slider |
+
+下面是一个使用PyQt中的QSlider的详细示例，展示了如何创建和使用QSlider，并处理其信号：
+
+```python
+import sys
+from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel, QSlider
+from PyQt5.QtCore import Qt
+
+class MyWidget(QWidget):
+    def __init__(self):
+        super().__init__()
+
+        self.initUI()
+
+    def initUI(self):
+        self.setWindowTitle('QSlider Example')
+
+        # 创建一个垂直布局
+        vbox = QVBoxLayout()
+
+        # 创建一个标签用于显示滑块值
+        self.label = QLabel('Slider Value: 0', self)
+        vbox.addWidget(self.label)
+
+        # 创建一个水平滑块 垂直滑块Qt.Vertical
+        self.slider = QSlider(Qt.Horizontal, self)
+        self.slider.setRange(0, 100)  # 设置范围
+        self.slider.setValue(0)  # 初始化值
+        self.slider.setSingleStep(1)  # 设置步长
+        self.slider.setTickPosition(QSlider.TicksBelow)  # 设置刻度位置
+        self.slider.setTickInterval(10)  # 设置刻度间隔
+        self.slider.valueChanged.connect(self.on_slider_valueChanged)
+        vbox.addWidget(self.slider)
+
+        # 应用布局
+        self.setLayout(vbox)
+
+    def on_slider_valueChanged(self, value):
+        self.label.setText(f'Slider Value: {value}')
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    widget = MyWidget()
+    widget.show()
+    sys.exit(app.exec_())
+```
+
+在这个示例中，我们创建了一个窗口，其中包含一个水平QSlider滑块，并显示其值的QLabel。每当滑块值改变时，我们将更新QLabel中显示的滑块值。
+
+
+
+### QSpinBox详细使用
+
+以下是一个使用PyQt中的QSpinBox的详细示例，展示了如何创建和使用QSpinBox，并处理其信号：
+
+```python
+import sys
+from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel, QSpinBox
+
+class MyWidget(QWidget):
+    def __init__(self):
+        super().__init__()
+
+        self.initUI()
+
+    def initUI(self):
+        self.setWindowTitle('QSpinBox Example')
+
+        # 创建一个垂直布局
+        vbox = QVBoxLayout()
+
+        # 创建一个标签用于显示当前值
+        self.label = QLabel('Spin Value: 0', self)
+        vbox.addWidget(self.label)
+
+        # 创建一个数字调节框
+        self.spinbox = QSpinBox(self)
+        self.spinbox.setMinimum(0)  # 设置最小值
+        self.spinbox.setMaximum(100)  # 设置最大值
+        self.spinbox.setValue(0)  # 设置默认值
+        self.spinbox.valueChanged.connect(self.on_spinbox_valueChanged)
+        vbox.addWidget(self.spinbox)
+
+        # 应用布局
+        self.setLayout(vbox)
+
+    def on_spinbox_valueChanged(self, value):
+        self.label.setText(f'Spin Value: {value}')
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    widget = MyWidget()
+    widget.show()
+    sys.exit(app.exec_())
+```
+
+在这个示例中，我们创建了一个窗口，其中包含一个QSpinBox用于显示整数值，并显示其值的QLabel。每当QSpinBox的值改变时，我们将更新QLabel中显示的值。
+
+
+
+
+
+### QDialog详细使用
+
+```
+import sys
+from PyQt5.QtWidgets import (QApplication,
+                             QDialog,
+                             QPushButton,
+                             QVBoxLayout,
+                             QLabel,
+                             QMainWindow)
+
+#定义一个QDialog类
+class MyDialog(QDialog):
+    def __init__(self):
+        super().__init__()
+
+        self.setWindowTitle('QDialog Example')
+
+        # 创建一个垂直布局
+        vbox = QVBoxLayout()
+
+        # 创建一个标签用于显示消息
+        self.label = QLabel('This is a QDialog', self)
+        vbox.addWidget(self.label)
+
+        # 创建一个按钮用于关闭对话框
+        button = QPushButton('Close', self)
+        button.clicked.connect(self.close)  # 点击按钮关闭对话框
+        vbox.addWidget(button)
+
+        # 应用布局
+        self.setLayout(vbox)
+
+#定义一个主窗体
+class MyWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
+
+        self.setWindowTitle('QMainWindow Example')
+
+        # 创建一个按钮用于显示对话框
+        button = QPushButton('Show Dialog', self)
+        button.clicked.connect(self.showDialog)  # 点击按钮显示对话框
+        self.setCentralWidget(button)
+
+    def showDialog(self):
+        dialog = MyDialog()
+        dialog.exec_()  # 以模态方式显示对话框
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+
+    window = MyWindow()
+    window.show()
+
+    sys.exit(app.exec_())
+```
+
+
+
+
+
+### QMessageBox详细使用
+
+QMessageBox对话框种类
+
+| void                        | **[about](http://127.0.0.1:53224/qt_5/doc.qt.io/qt-5/qmessagebox.html#about)**(QWidget **parent*, const QString &*title*, const QString &*text*) |
+| --------------------------- | ------------------------------------------------------------ |
+| void                        | **[aboutQt](http://127.0.0.1:53224/qt_5/doc.qt.io/qt-5/qmessagebox.html#aboutQt)**(QWidget **parent*, const QString &*title* = QString()) |
+| QMessageBox::StandardButton | **[critical](http://127.0.0.1:53224/qt_5/doc.qt.io/qt-5/qmessagebox.html#critical)**(QWidget **parent*, const QString &*title*, const QString &*text*, QMessageBox::StandardButtons *buttons* = Ok, QMessageBox::StandardButton *defaultButton* = NoButton) |
+| QMessageBox::StandardButton | **[information](http://127.0.0.1:53224/qt_5/doc.qt.io/qt-5/qmessagebox.html#information)**(QWidget **parent*, const QString &*title*, const QString &*text*, QMessageBox::StandardButtons *buttons* = Ok, QMessageBox::StandardButton *defaultButton* = NoButton) |
+| QMessageBox::StandardButton | **[question](http://127.0.0.1:53224/qt_5/doc.qt.io/qt-5/qmessagebox.html#question)**(QWidget **parent*, const QString &*title*, const QString &*text*, QMessageBox::StandardButtons *buttons* = StandardButtons(Yes \| No), QMessageBox::StandardButton *defaultButton* = NoButton) |
+| QMessageBox::StandardButton | **[warning](http://127.0.0.1:53224/qt_5/doc.qt.io/qt-5/qmessagebox.html#warning)**(QWidget **parent*, const QString &*title*, const QString &*text*, QMessageBox::StandardButtons *buttons* = Ok, QMessageBox::StandardButton *defaultButton* = NoButton) |
+
+| ![](assets/qmessagebox-quest.png) | Question    | For asking a question during normal operations.    |
+| --------------------------------- | ----------- | -------------------------------------------------- |
+| ![](assets/qmessagebox-quest.png) | Information | For reporting information about normal operations. |
+| ![](assets/qmessagebox-warn.png)  | Warning     | For reporting non-critical errors.                 |
+| ![](assets/qmessagebox-crit.png)  | Critical    | For reporting critical errors.                     |
