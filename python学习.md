@@ -1410,3 +1410,399 @@ if __name__ == '__main__':
     ex.show()
     app.exec_()
 ```
+
+
+
+
+
+### QLineEdit掩码校验
+
+PyQt支持的掩码
+
+| Mask Character |                           Meaning                            |
+| :------------: | :----------------------------------------------------------: |
+|      `A`       | character of the Letter category required, such as A-Z, a-z. |
+|      `a`       | character of the Letter category permitted but not required. |
+|      `N`       | character of the Letter or Number category required, such as A-Z, a-z, 0-9. |
+|      `n`       | character of the Letter or Number category permitted but not required. |
+|      `X`       |              Any non-blank character required.               |
+|      `x`       |     Any non-blank character permitted but not required.      |
+|      `9`       |     character of the Number category required, e.g 0-9.      |
+|      `0`       | character of the Number category permitted but not required. |
+|      `D`       | character of the Number category and larger than zero required, such as 1-9 |
+|      `d`       | character of the Number category and larger than zero permitted but not required, such as 1-9. |
+|      `#`       | character of the Number category, or plus/minus sign permitted but not required. |
+|      `H`       |        Hexadecimal character required. A-F, a-f, 0-9.        |
+|      `h`       |      Hexadecimal character permitted but not required.       |
+|      `B`       |               Binary character required. 0-1.                |
+|      `b`       |         Binary character permitted but not required.         |
+| Meta Character |                           Meaning                            |
+|      `>`       |     All following alphabetic characters are uppercased.      |
+|      `<`       |     All following alphabetic characters are lowercased.      |
+|      `!`       |                 Switch off case conversion.                  |
+|      `;c`      | Terminates the input mask and sets the *blank* character to *c*. |
+|   `[ ] { }`    |                          Reserved.                           |
+|      `\`       | Use `\` to escape the special characters listed above to use them as separators. |
+
+示例代码：
+
+```python
+from PyQt5.QtWidgets import QWidget, QLineEdit, QApplication,QPushButton, QVBoxLayout, QHBoxLayout, QFormLayout
+from PyQt5.QtCore import Qt
+
+class QLineEditMask(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.initUI()
+
+
+    def initUI(self):
+        self.setWindowTitle('masked QLineEdit')
+        formLayout = QFormLayout()
+
+        ipLineEdit = QLineEdit()
+        macLineEdit = QLineEdit()
+        dateLineEdit = QLineEdit()
+        licenseLineEdit = QLineEdit()
+
+        ipLineEdit.setPlaceholderText('IP Address')
+        macLineEdit.setPlaceholderText('MAC Address')
+        dateLineEdit.setPlaceholderText('Date (MM/DD/YYYY)')
+        licenseLineEdit.setPlaceholderText('License Plate')
+
+        ipLineEdit.setInputMask('000.000.000.000;_')
+        macLineEdit.setInputMask('HH:HH:HH:HH:HH:HH;_')
+        dateLineEdit.setInputMask('0000-00-00;_')
+        licenseLineEdit.setInputMask('>AAAAA-AAAAA-AAAAA-AAAAA-AAAAA;_')
+
+        formLayout.addRow('IP Address:', ipLineEdit)
+        formLayout.addRow('MAC Address:', macLineEdit)
+        formLayout.addRow('Date:', dateLineEdit)
+        formLayout.addRow('License Plate:', licenseLineEdit)
+
+        self.setLayout(formLayout)
+
+
+if __name__ == '__main__':
+    app = QApplication([])
+    ex = QLineEditMask()
+    ex.show()
+    app.exec_()
+```
+
+
+
+### QLineEdit控件综合功能
+
+
+
+```python
+'''
+
+QlineEdit综合示例
+
+'''
+
+import sys
+
+from PyQt5.QtGui import QIntValidator, QDoubleValidator
+from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import *
+
+
+class QlineEditDemo(QWidget):
+    def __init__(self):
+        super(QlineEditDemo, self).__init__()
+        self.initUI()
+
+    def initUI(self):
+        self.setWindowTitle('QLineEditDemo')
+
+        lineEditInt = QLineEdit()
+        lineEditInt.setPlaceholderText('输入整数')
+        lineEditInt.setMaxLength(4)
+        lineEditInt.setAlignment(Qt.AlignRight)
+        intValidator = QIntValidator()
+        lineEditInt.setValidator(intValidator)
+
+        lineEditDouble = QLineEdit()
+        lineEditDouble.setPlaceholderText('输入浮点数')
+        doubleValidator = QDoubleValidator(0.99,99.99,2)
+        lineEditDouble.setValidator(doubleValidator)
+
+        lineEditInputMask = QLineEdit()
+        lineEditInputMask.setInputMask('999-999-9999;_')
+
+        lineEditTextChanged = QLineEdit()
+        lineEditTextChanged.setEchoMode(QLineEdit.Password)
+        lineEditTextChanged.textChanged.connect(self.textChanged)
+
+        lineEditTextFinished = QLineEdit()
+        lineEditTextFinished.textEdited.connect(self.textFinished)
+
+        lineEditReadOnly = QLineEdit()
+        lineEditReadOnly.setReadOnly(True)
+
+        formLayout = QFormLayout()
+        formLayout.addRow('整数校验', lineEditInt)
+        formLayout.addRow('浮点数校验', lineEditDouble)
+        formLayout.addRow('掩码校验',lineEditInputMask)
+        formLayout.addRow('文本改变', lineEditTextChanged)
+        formLayout.addRow('文本结束', lineEditTextFinished)
+        formLayout.addRow('只读', lineEditReadOnly)
+
+        self.setLayout(formLayout)
+
+    def textChanged(self, text):
+        print('text changed:', text)
+
+    def textFinished(self):
+        print('text finished:')
+
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    main = QlineEditDemo()
+    main.show()
+    sys.exit(app.exec_())
+```
+
+
+
+
+
+### QPushButton
+
+| Header:       | #include <QPushButton> |
+| ------------- | ---------------------- |
+| qmake:        | QT += widgets          |
+| Inherits:     | QAbstractButton        |
+| Inherited By: | QCommandLinkButton     |
+
+
+
+QPushButton是最常用的用户控件，可以单击按钮执行操作，通常的按钮操作有OK，Apply,Cancel,Yes,No 和Help
+
+QPushButton在windows可以设置快捷键操作，在文本前加&符号即可，实例
+
+```python
+import sys
+from PyQt5.QtWidgets import QApplication, QPushButton, QWidget
+
+
+class Window(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("QPushButton Test")
+        self.setGeometry(500, 200, 400, 300)
+
+        self.button = QPushButton("&Click me", self) #设置快捷键Alt+C
+        self.button.move(100, 100)
+        self.button.clicked.connect(self.button_clicked)
+
+    def button_clicked(self):
+        print("Button clicked")
+
+if __name__ == "__main__":
+
+    app = QApplication(sys.argv)
+    window = Window()
+    window.show()
+    sys.exit(app.exec_())
+```
+
+QPushButton显示文本标签和可选的小图标。这些可以使用构造函数进行设置，并在稍后使用setText()和setIcon()进行更改。如果按钮被禁用，则文本和图标的外观将根据GUI样式进行操作，使按钮看起来“禁用”。
+
+
+
+### void QAbstractButton::animateClick(int *msec* = 100)
+
+```
+import sys
+import time
+
+from PyQt5.QtCore import QTimer
+from PyQt5.QtGui import QIcon
+from PyQt5.QtWidgets import (QApplication,
+                             QPushButton,
+                             QWidget,
+                             QHBoxLayout,
+                             QVBoxLayout)
+
+
+class Window(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("QPushButton Test")
+        qvb = QVBoxLayout()
+
+     
+        self.button4 = QPushButton('点击按钮效果', self)
+        self.button4.clicked.connect(self.on_button_clicked)
+
+        qvb.addWidget(self.button4)
+        self.setLayout(qvb)
+
+    def on_button_clicked(self):
+        print('Button clicked')
+
+    def animate_button_click(self):
+        # 模拟点击按钮的动画效果
+        self.button.animateClick(3000) #3秒后按钮被释放，执行点就效果
+
+if __name__ == "__main__":
+
+    app = QApplication(sys.argv)
+    window = Window()
+    window.show()
+    QTimer.singleShot(1000,window.animate_button_click) #到1秒后自动执行方法
+    sys.exit(app.exec_())
+```
+
+
+
+
+
+QPushButton Click()与Clicked()
+
+在 PyQt 中，`clicked()` 和 `click()` 是两个不同的方法：
+
+1. `clicked()` 是一个信号（Signal），用于在按钮被点击时发出信号，可以连接到槽（Slot）函数，以便在按钮被点击时执行特定操作。
+2. `click()` 是一个方法，用于模拟按钮被点击的动作。调用 `click()` 方法等同于用户实际点击了按钮一样，会触发按钮的 `clicked` 信号，并执行与之相连接的槽函数。
+
+下面是一个简单的示例，演示了 `clicked()` 信号和 `click()` 方法的使用：
+
+```python
+import sys
+from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton
+
+class MyWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
+
+        self.setWindowTitle('Button Example')
+        self.setGeometry(200, 200, 300, 100)
+
+        self.button = QPushButton('Click Me', self)
+        self.button.clicked.connect(self.on_button_clicked)
+        self.button.setGeometry(100, 40, 100, 30)
+
+    def on_button_clicked(self):
+        print('Button clicked')
+
+    def simulate_button_click(self):
+        # 模拟按钮点击
+        self.button.click()
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    window = MyWindow()
+    window.show()
+
+    # 模拟按钮点击
+    window.simulate_button_click()
+
+    sys.exit(app.exec_())
+```
+
+在这个示例中，我们创建了一个 `QPushButton`，并连接了 `clicked()` 信号到一个槽函数 `on_button_clicked`。然后定义了一个名为 `simulate_button_click` 的方法，用于调用按钮的 `click()` 方法来模拟按钮的点击动作。
+
+
+
+
+
+### pressed信号
+
+```python
+import sys
+from PyQt5.QtWidgets import QApplication, QPushButton
+
+
+class Window(QPushButton):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("QPushButton Pressed")
+        self.setGeometry(500, 200, 400, 300)
+        self.setText("pressed test")
+        self.pressed.connect(self.button_pressed)
+
+    def button_pressed(self):
+        print("Button clicked")
+
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    window = Window()
+    window.show()
+    sys.exit(app.exec_())
+```
+
+
+
+### functools.partial和l
+
+在 PyQt 中，您可以使用 `functools.partial` 来绑定槽函数并传递参数。下面是一个示例，演示了如何在 QPushButton 上绑定槽并传递参数：
+
+```python
+import sys
+from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton
+from functools import partial
+
+class MyWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
+
+        self.setWindowTitle('Button Example')
+        self.setGeometry(200, 200, 300, 100)
+
+        self.button = QPushButton('Click Me', self)
+        self.button.setGeometry(100, 40, 100, 30)
+
+        # 使用 functools.partial 绑定带参数的槽函数
+        self.button.clicked.connect(partial(self.on_button_clicked, 'Hello'))
+
+    def on_button_clicked(self, message):
+        print('Button clicked:', message)
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    window = MyWindow()
+    window.show()
+    sys.exit(app.exec_())
+```
+
+在这个示例中，我们使用 `functools.partial` 绑定了槽函数 `on_button_clicked` 并传递了一个参数 `'Hello'`。当按钮被点击时，槽函数将被调用，并输出带有参数的消息。
+
+这种方式在需要通过按钮单击来执行某个操作并传递额外参数时非常有用。
+
+
+
+您可以使用lambda表达式来传递带参数的信号。下面是一个简单的示例，演示了如何在PyQt中使用lambda表达式传递带参数的信号：
+
+```python
+import sys
+from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton
+
+class MyWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
+
+        self.setWindowTitle('Button Example')
+        self.setGeometry(200, 200, 300, 100)
+
+        self.button = QPushButton('Click Me', self)
+        self.button.setGeometry(100, 40, 100, 30)
+
+        # 使用 lambda 表达式传递带参数的信号
+        self.button.clicked.connect(lambda: self.on_button_clicked('Hello'))
+
+    def on_button_clicked(self, message):
+        print('Button clicked:', message)
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    window = MyWindow()
+    window.show()
+    sys.exit(app.exec_())
+```
+
+在这个示例中，我们使用lambda表达式传递了带参数的信号。当按钮被点击时，lambda表达式将调用槽函数`on_button_clicked`，并传递参数'Hello'。
