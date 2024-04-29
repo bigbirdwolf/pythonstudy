@@ -1738,7 +1738,7 @@ if __name__ == "__main__":
 
 
 
-### functools.partial和l
+### functools.partial和lambda
 
 在 PyQt 中，您可以使用 `functools.partial` 来绑定槽函数并传递参数。下面是一个示例，演示了如何在 QPushButton 上绑定槽并传递参数：
 
@@ -2256,5 +2256,252 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
     myWin = MyWindow()
     myWin.show()
+    sys.exit(app.exec_())
+```
+
+
+
+
+
+### QInputDialog详细使用
+
+
+
+```python
+'''
+QInputDialog 控件练习
+'''
+
+import sys
+from PyQt5.QtWidgets import (QApplication, QPushButton, QLineEdit,
+                             QInputDialog,
+                             QLineEdit, QDialog, QDialogButtonBox,QFormLayout,QHBoxLayout)
+
+
+class InputDialogTest(QDialog):
+    def __init__(self):
+        super().__init__()
+        self.initUI()
+
+    def initUI(self):
+        self.setWindowTitle('Input Dialog')
+        self.resize(300, 100)
+
+        #创建一个表单布局
+        layout = QFormLayout()
+
+        #创建3个按钮和输入框
+        self.buttonItem = QPushButton()
+        self.buttonItem.setText('使用InputDialog获取Item')
+        self.qlineEditItem = QLineEdit()
+        self.buttonItem.clicked.connect(self.getItem)
+
+        self.buttonText = QPushButton()
+        self.buttonText.setText('使用InputDialog获取文本')
+        self.qlineEditText = QLineEdit()
+        self.buttonText.clicked.connect(self.getText)
+
+        self.buttonInt = QPushButton()
+        self.buttonInt.setText('使用InputDialog获取整数')
+        self.qlineEditInt = QLineEdit()
+        self.buttonInt.clicked.connect(self.getInt)
+
+
+        layout.addRow(self.buttonItem, self.qlineEditItem)
+        layout.addRow(self.buttonText, self.qlineEditText)
+        layout.addRow(self.buttonInt, self.qlineEditInt)
+
+        self.setLayout(layout)
+
+    def getItem(self):
+        item, ok = QInputDialog.getItem(self, '选择球队', '请选择一个球队', ['湖人', '快船', '热火'])
+        if ok and item:
+            self.qlineEditItem.setText(item)
+
+    def getText(self):
+        text, ok = QInputDialog.getText(self, '输入文本', '请输入文本:')
+        if ok and text:
+            self.qlineEditText.setText(text)
+
+    def getInt(self):
+        num, ok = QInputDialog.getInt(self, '输入整数', '请输入整数:')
+        if ok and num:
+            self.qlineEditInt.setText(str(num))
+
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    ex = InputDialogTest()
+    ex.show()
+    sys.exit(app.exec_())
+```
+
+
+
+### QFontDialog详细使用
+
+```python
+'''
+
+QFontDialog 使用示例
+
+'''
+
+import sys
+from PyQt5.QtWidgets import QApplication, QFontDialog, QPushButton, QWidget, QVBoxLayout, QLabel
+
+
+class QFontDialogTest(QWidget):
+    def __init__(self):
+        super(QFontDialogTest, self).__init__()
+        self.initUI()
+
+
+    def initUI(self):
+        self.setWindowTitle('QFontDialog使用示例')
+        self.resize(400, 300)
+
+        button = QPushButton('选择字体', self)
+        button.clicked.connect(self.showDialog)
+        self.label = QLabel('设置字体后，点击按钮查看效果')
+
+        layout = QVBoxLayout()
+        layout.addWidget(button)
+        layout.addWidget(self.label)
+        self.setLayout(layout)
+
+
+    def showDialog(self):
+        font, ok = QFontDialog.getFont()
+        if ok:
+            self.label.setFont(font)
+
+
+if __name__ == '__main__':
+    app = QApplication([])
+    ex = QFontDialogTest()
+    ex.show()
+    sys.exit(app.exec_())
+```
+
+
+
+
+
+### QColorDialog详细使用
+
+
+
+```
+'''
+
+QColorDialog 使用示例
+
+'''
+
+import sys
+from PyQt5.QtWidgets import QApplication, QColorDialog, QPushButton, QWidget, QVBoxLayout, QLabel
+from PyQt5.QtGui import QPalette, QColor
+
+
+class QColorDialogTest(QWidget):
+    def __init__(self):
+        super(QColorDialogTest, self).__init__()
+        self.initUI()
+
+
+    def initUI(self):
+        self.setWindowTitle('QColorDialog使用示例')
+        self.resize(400, 300)
+
+        button = QPushButton('选择颜色', self)
+        button.clicked.connect(self.showDialog)
+        self.label = QLabel('设置字体颜色，点击按钮查看效果')
+
+        layout = QVBoxLayout()
+        layout.addWidget(button)
+        layout.addWidget(self.label)
+        self.setLayout(layout)
+
+
+    def showDialog(self):
+        color = QColorDialog.getColor()
+        p = QPalette()
+        p.setColor(QPalette.WindowText, color)
+        self.label.setPalette(p)
+
+
+if __name__ == '__main__':
+    app = QApplication([])
+    ex = QColorDialogTest()
+    ex.show()
+    sys.exit(app.exec_())
+```
+
+
+
+
+
+### QFileDialog详细使用
+
+```
+'''
+
+QFileDialog 使用示例
+创建两个按钮分别打开文件对话框，其中一个按钮选择图片显示在label，另外一个按钮选择文件，并将文件的内容显示在textEdit中。
+'''
+
+import sys
+from PyQt5.QtWidgets import QApplication, QFileDialog, QLabel, QPushButton, QTextEdit, QWidget,QVBoxLayout,QHBoxLayout
+from PyQt5.QtGui import QPixmap
+from PyQt5.QtCore import Qt
+
+class QFileDialogTest(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.initUI()
+
+
+    def initUI(self):
+        self.setWindowTitle('QFileDialog Test')
+        self.resize(400, 300)
+
+        self.label = QLabel(self)
+        self.label.setAlignment(Qt.AlignCenter)
+
+        self.openImageButton = QPushButton('Open Image', self)
+        self.openImageButton.clicked.connect(self.openImage)
+
+        self.openFileButton = QPushButton('Open File', self)
+        self.openFileButton.clicked.connect(self.openFile)
+
+        self.textEdit = QTextEdit(self)
+
+        layout = QVBoxLayout()
+        layout.addWidget(self.openImageButton)
+        layout.addWidget(self.openFileButton)
+        layout.addWidget(self.label)
+        layout.addWidget(self.textEdit)
+        self.setLayout(layout)
+
+    def openImage(self):
+
+        fileName, _ = QFileDialog.getOpenFileName(self, 'Open Image', '', 'Image Files (*.jpg *.png *.jpeg)')
+        if fileName:
+            pixmap = QPixmap(fileName)
+            self.label.setPixmap(pixmap)
+
+    def openFile(self):
+        fileName, _ = QFileDialog.getOpenFileName(self, 'Open File', '', 'All Files (*)')
+        if fileName:
+            with open(fileName, encoding='utf-8',mode='r') as f:
+                text = f.read()
+                self.textEdit.setText(text)
+
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    ex = QFileDialogTest()
+    ex.show()
     sys.exit(app.exec_())
 ```
