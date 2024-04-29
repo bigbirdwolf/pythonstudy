@@ -2554,3 +2554,230 @@ if __name__ == '__main__':
     ex.show()
     sys.exit(app.exec_())
 ```
+
+
+
+#### QPainter绘制不同类型的直线
+
+以下是使用 PyQt 中的 QPainter 类来绘制不同类型的直线的示例代码。
+
+1. 绘制基本直线：
+
+```python
+import sys
+from PyQt5.QtWidgets import QApplication, QWidget
+from PyQt5.QtGui import QPainter, QPen
+from PyQt5.QtCore import Qt
+
+class Example(QWidget):
+    def __init__(self):
+        super().__init__()
+        
+    def paintEvent(self, event):
+        painter = QPainter(self)
+        painter.setPen(QPen(Qt.black, 2, Qt.SolidLine))
+        painter.drawLine(20, 20, 100, 100)
+
+app = QApplication(sys.argv)
+ex = Example()
+ex.show()
+sys.exit(app.exec_())
+```
+
+1. 绘制虚线：
+
+```python
+import sys
+from PyQt5.QtWidgets import QApplication, QWidget
+from PyQt5.QtGui import QPainter, QPen
+from PyQt5.QtCore import Qt
+
+class Example(QWidget):
+    def __init__(self):
+        super().__init__()
+        
+    def paintEvent(self, event):
+        painter = QPainter(self)
+        painter.setPen(QPen(Qt.black, 2, Qt.DashLine))
+        painter.drawLine(20, 20, 100, 100)
+
+app = QApplication(sys.argv)
+ex = Example()
+ex.show()
+sys.exit(app.exec_())
+```
+
+1. 绘制点划线：
+
+```python
+import sys
+from PyQt5.QtWidgets import QApplication, QWidget
+from PyQt5.QtGui import QPainter, QPen
+from PyQt5.QtCore import Qt
+
+class Example(QWidget):
+    def __init__(self):
+        super().__init__()
+        
+    def paintEvent(self, event):
+        painter = QPainter(self)
+        painter.setPen(QPen(Qt.black, 2, Qt.DotLine))
+        painter.drawLine(20, 20, 100, 100)
+
+app = QApplication(sys.argv)
+ex = Example()
+ex.show()
+sys.exit(app.exec_())
+```
+
+1. 绘制虚点线：
+
+```python
+import sys
+from PyQt5.QtWidgets import QApplication, QWidget
+from PyQt5.QtGui import QPainter, QPen
+from PyQt5.QtCore import Qt
+
+class Example(QWidget):
+    def __init__(self):
+        super().__init__()
+        
+    def paintEvent(self, event):
+        painter = QPainter(self)
+        painter.setPen(QPen(Qt.black, 2, Qt.DashDotLine))
+        painter.drawLine(20, 20, 100, 100)
+
+app = QApplication(sys.argv)
+ex = Example()
+ex.show()
+sys.exit(app.exec_())
+```
+
+1. 绘制虚点点线：
+
+```python
+import sys
+from PyQt5.QtWidgets import QApplication, QWidget
+from PyQt5.QtGui import QPainter, QPen
+from PyQt5.QtCore import Qt
+
+class Example(QWidget):
+    def __init__(self):
+        super().__init__()
+        
+    def paintEvent(self, event):
+        painter = QPainter(self)
+        painter.setPen(QPen(Qt.black, 2, Qt.DashDotDotLine))
+        painter.drawLine(20, 20, 100, 100)
+
+app = QApplication(sys.argv)
+ex = Example()
+ex.show()
+sys.exit(app.exec_())
+```
+
+在示例代码中，我们创建了一个继承自 QWidget 的自定义窗口类 Example，并重写了它的 paintEvent 方法用于绘制不同类型的直线。我们使用了 QPainter 的 setPen 方法来设置不同类型的画笔，包括线条颜色、线宽和线型。然后使用 drawLine 方法来绘制直线，其中参数分别是起点坐标和终点坐标。
+
+
+
+#### QPainter绘制各种图形
+
+以下是使用 PyQt 中的 QPainter 类来绘制各种图形的详细示例代码。
+
+1. 绘制矩形：
+
+```python
+import sys
+from PyQt5.QtWidgets import QApplication, QWidget
+from PyQt5.QtGui import QPainter, QPen
+from PyQt5.QtCore import Qt, QRect
+
+class Example(QWidget):
+    def __init__(self):
+        super().__init__()
+
+    def paintEvent(self, event):
+        painter = QPainter(self)
+        painter.setPen(QPen(Qt.black, 2, Qt.SolidLine))
+        painter.drawRect(20, 20, 100, 100)
+
+app = QApplication(sys.argv)
+ex = Example()
+ex.show()
+sys.exit(app.exec_())
+```
+
+1. 绘制椭圆：
+
+```python
+import sys
+from PyQt5.QtWidgets import QApplication, QWidget
+from PyQt5.QtGui import QPainter, QPen
+from PyQt5.QtCore import Qt, QRect
+
+class Example(QWidget):
+    def __init__(self):
+        super().__init__()
+
+    def paintEvent(self, event):
+        painter = QPainter(self)
+        painter.setPen(QPen(Qt.black, 2, Qt.SolidLine))
+        painter.drawEllipse(20, 20, 100, 80)
+
+app = QApplication(sys.argv)
+ex = Example()
+ex.show()
+sys.exit(app.exec_())
+```
+
+1. 绘制多边形：
+
+```python
+import sys
+from PyQt5.QtWidgets import QApplication, QWidget
+from PyQt5.QtGui import QPainter, QPen, QBrush
+from PyQt5.QtCore import Qt, QPoint, QPolygon
+
+class Example(QWidget):
+    def __init__(self):
+        super().__init__()
+
+    def paintEvent(self, event):
+        painter = QPainter(self)
+        painter.setPen(QPen(Qt.black, 2, Qt.SolidLine))
+        painter.setBrush(Qt.red)
+        points = [QPoint(50, 50), QPoint(150, 50), QPoint(100, 150)]
+        polygon = QPolygon(points)
+        painter.drawPolygon(polygon)
+
+app = QApplication(sys.argv)
+ex = Example()
+ex.show()
+sys.exit(app.exec_())
+```
+
+1. 绘制圆弧：
+
+```python
+import sys
+from PyQt5.QtWidgets import QApplication, QWidget
+from PyQt5.QtGui import QPainter, QPen
+from PyQt5.QtCore import Qt, QRect
+
+class Example(QWidget):
+    def __init__(self):
+        super().__init__()
+
+    def paintEvent(self, event):
+        painter = QPainter(self)
+        painter.setPen(QPen(Qt.black, 2, Qt.SolidLine))
+        rect = QRect(20, 20, 100, 100)
+        painter.drawArc(rect, 30 * 16, 120 * 16)
+
+app = QApplication(sys.argv)
+ex = Example()
+ex.show()
+sys.exit(app.exec_())
+```
+
+在示例代码中，我们创建了一个继承自 QWidget 的自定义窗口类 Example，并重写了它的 paintEvent 方法用于绘制不同类型的图形。我们使用了 QPainter 的 setPen 方法来设置画笔，包括线条颜色、线宽和线型。然后使用相应的绘制函数来绘制矩形、椭圆、多边形和圆弧。
