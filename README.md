@@ -2781,3 +2781,181 @@ sys.exit(app.exec_())
 ```
 
 在示例代码中，我们创建了一个继承自 QWidget 的自定义窗口类 Example，并重写了它的 paintEvent 方法用于绘制不同类型的图形。我们使用了 QPainter 的 setPen 方法来设置画笔，包括线条颜色、线宽和线型。然后使用相应的绘制函数来绘制矩形、椭圆、多边形和圆弧。
+
+
+
+#### QPainter画刷填充
+
+绘制椭圆并填充渐变颜色：
+
+```python
+import sys
+from PyQt5.QtWidgets import QApplication, QWidget
+from PyQt5.QtGui import QPainter, QBrush, QLinearGradient
+from PyQt5.QtCore import Qt
+
+class Example(QWidget):
+    def __init__(self):
+        super().__init__()
+
+    def paintEvent(self, event):
+        painter = QPainter(self)
+        gradient = QLinearGradient(20, 20, 120, 120)
+        gradient.setColorAt(0, Qt.green)
+        gradient.setColorAt(1, Qt.blue)
+        brush = QBrush(gradient)
+        painter.setBrush(brush)
+        painter.drawEllipse(20, 20, 100, 80)
+
+app = QApplication(sys.argv)
+ex = Example()
+ex.show()
+sys.exit(app.exec_())
+```
+
+
+
+### 控件拖动使用
+
+```
+import sys
+from PyQt5.QtWidgets import QApplication, QWidget, QLabel
+from PyQt5.QtGui import QPixmap
+from PyQt5.QtCore import Qt, QMimeData, QPoint, QRect, QByteArray, QDataStream, QIODevice
+from PyQt5.Qt import QPushButton, QDrag
+
+class DragLabel(QLabel):
+    def mousePressEvent(self, event):
+        if event.button() == Qt.LeftButton:
+            drag = QDrag(self)
+            mimeData = QMimeData()
+            mimeData.setText(self.text())
+            drag.setMimeData(mimeData)
+            drag.setHotSpot(event.pos() - self.rect().topLeft())
+            drag.exec_(Qt.MoveAction)
+
+class DropLabel(QLabel):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setAcceptDrops(True)
+
+    def dragEnterEvent(self, event):
+        if event.mimeData().hasText():
+            event.accept()
+        else:
+            event.ignore()
+
+    def dropEvent(self, event):
+        position = event.pos()
+        text = event.mimeData().text()
+        label = QLabel(text, self)
+        label.move(position)
+        label.show()
+
+class Example(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.initUI()
+
+    def initUI(self):
+        self.setWindowTitle('Drag and Drop Example')
+        self.setGeometry(300, 300, 300, 220)
+
+        drag_label = DragLabel('Drag me', self)
+        drag_label.move(50, 50)
+
+        drop_label = DropLabel(self)
+        drop_label.setGeometry(150, 50, 100, 100)
+        drop_label.setStyleSheet("border: 2px dashed #000")
+
+        self.show()
+
+app = QApplication(sys.argv)
+ex = Example()
+sys.exit(app.exec_())
+```
+
+
+
+### QCelendar详细使用
+
+以下是使用 PyQt 的 QCalendarWidget 控件的详细示例代码。
+
+```python
+import sys
+from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QCalendarWidget, QLabel
+from PyQt5.QtCore import QDate
+
+class CalendarExample(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.initUI()
+
+    def initUI(self):
+        layout = QVBoxLayout()
+
+        calendar = QCalendarWidget(self)
+        calendar.setGridVisible(True)  # 显示日期网格
+        calendar.setSelectedDate(QDate.currentDate())  # 设置初始选中日期
+
+        calendar.clicked.connect(self.showDate)  # 连接信号与槽函数
+
+        self.label = QLabel(self)
+        self.showDate(calendar.selectedDate())  # 显示初始选中日期
+
+        layout.addWidget(calendar)
+        layout.addWidget(self.label)
+
+        self.setLayout(layout)
+        self.setGeometry(100, 100, 400, 300)
+        self.setWindowTitle('Calendar Example')
+
+    def showDate(self, date):
+        self.label.setText(date.toString())
+
+app = QApplication(sys.argv)
+ex = CalendarExample()
+ex.show()
+sys.exit(app.exec_())
+```
+
+在该示例中，我们创建了一个继承自 QWidget 的自定义窗口类 CalendarExample，在其 initUI 方法中创建了一个 QCalendarWidget 控件，并设置了一些基本属性。我们还连接了 QCalendarWidget 的 clicked 信号到自定义的 showDate 槽函数，该函数在用户点击日期时会更新标签显示选择的日期信息。
+
+### QToolBar详细使用
+
+以下是使用 PyQt 的 QToolBar 控件的详细示例代码。
+
+```python
+import sys
+from PyQt5.QtWidgets import QApplication, QMainWindow, QAction, QToolBar
+
+class ToolbarExample(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.initUI()
+
+    def initUI(self):
+        self.setWindowTitle('Toolbar Example')
+        self.setGeometry(300, 300, 300, 200)
+
+        exitAct = QAction('Exit', self)
+        exitAct.triggered.connect(self.close)
+
+        saveAct = QAction('Save', self)
+
+        newAct = QAction('New', self)
+
+        self.toolbar = QToolBar(self)
+        self.toolbar.addAction(newAct)
+        self.toolbar.addAction(saveAct)
+        self.toolbar.addAction(exitAct)
+
+        self.addToolBar(self.toolbar)
+
+app = QApplication(sys.argv)
+ex = ToolbarExample()
+ex.show()
+sys.exit(app.exec_())
+```
+
+在上面的示例中，我们创建了一个继承自 QMainWindow 的自定义窗口类 ToolbarExample，在其 initUI 方法中创建了一个 QToolBar 控件，并向其添加了三个 QAction（分别代表“新建”、“保存”和“退出”功能）。然后我们通过 addToolBar 方法将 QToolBar 添加到窗口中的顶部工具栏。
