@@ -2959,3 +2959,39 @@ sys.exit(app.exec_())
 ```
 
 在上面的示例中，我们创建了一个继承自 QMainWindow 的自定义窗口类 ToolbarExample，在其 initUI 方法中创建了一个 QToolBar 控件，并向其添加了三个 QAction（分别代表“新建”、“保存”和“退出”功能）。然后我们通过 addToolBar 方法将 QToolBar 添加到窗口中的顶部工具栏。
+
+
+
+### QStatusBar详细使用
+
+```
+import sys
+from PyQt5.QtWidgets import QApplication, QMainWindow, QAction, QStatusBar
+
+class StatusBarExample(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.initUI()
+
+    def initUI(self):
+        self.setWindowTitle('Status Bar Example')
+        self.setGeometry(300, 300, 400, 200)
+
+        self.statusBar = QStatusBar(self)
+        self.setStatusBar(self.statusBar)
+
+        openAct = QAction('Open', self)
+        openAct.setStatusTip('Open a file')
+        openAct.triggered.connect(self.openFile)
+
+        self.toolbar = self.addToolBar('Open')
+        self.toolbar.addAction(openAct)
+
+    def openFile(self):
+        self.statusBar.showMessage('File opened', 2000)  # 显示消息，持续2秒
+
+app = QApplication(sys.argv)
+ex = StatusBarExample()
+ex.show()
+sys.exit(app.exec_())
+```
