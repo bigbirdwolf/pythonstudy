@@ -14,32 +14,60 @@ QTableView控件的使用步骤如下：
 下面是具体的代码：
 '''
 import sys
+import PyQt5.QtCore as QtCore
+from PyQt5.QtGui import QStandardItemModel, QStandardItem
+from PyQt5.QtWidgets import QApplication, QTableView, QTableView, QVBoxLayout
 
-from PyQt5.QtSql import QSqlTableModel
-from PyQt5.QtWidgets import QApplication, QTableView
 
-app = QApplication(sys.argv)
+class MainWindow(QTableView):
+    def __init__(self):
+        super(MainWindow, self).__init__()
+        self.init_ui()
 
-# 创建数据模型
-model = QSqlTableModel()
-model.setTable("employee")
-model.select()
+    def init_ui(self):
+        self.setWindowTitle('QTableView控件使用')
+        self.resize(600, 400)
 
-# 创建视图
-view = QTableView()
-view.setModel(model)
+        # 创建一个5行4列的数据模型
+        self.tableModel = QStandardItemModel(5,4)
+        self.tableModel.setHorizontalHeaderLabels(['id','姓名','职务','薪资']) #设置表头
 
-# 设置视图的列宽
-view.setColumnWidth(0, 100)
-view.setColumnWidth(1, 100)
-view.setColumnWidth(2, 100)
+        self.tableView = QTableView() #创建表格视图
+        self.tableView.setModel(self.tableModel) #设置数据模型
 
-# 连接视图的信号槽
-view.doubleClicked.connect(lambda: print("双击了某一行"))
+        #添加数据第一行
+        item11 = QStandardItem('10')
+        item12 = QStandardItem('wolf')
+        item13 = QStandardItem('程序员')
+        item14 = QStandardItem('10000')
 
-# 运行程序
-view.show()
-sys.exit(app.exec_())
+        #添加数据第四行
+        item41 = QStandardItem('20')
+        item42 = QStandardItem('tom')
+        item43 = QStandardItem('技术总监')
+        item44 = QStandardItem('20000')
+
+        self.tableModel.setItem(0,0,item11)
+        self.tableModel.setItem(0,1,item12)
+        self.tableModel.setItem(0,2,item13)
+        self.tableModel.setItem(0,3,item14)
+
+        self.tableModel.setItem(3,0,item41)
+        self.tableModel.setItem(3,1,item42)
+        self.tableModel.setItem(3,2,item43)
+        self.tableModel.setItem(3,3,item44)
+
+        vLayout = QVBoxLayout()
+
+        vLayout.addWidget(self.tableView)
+        self.setLayout(vLayout)
+
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    mainWindow = MainWindow()
+    mainWindow.show()
+    sys.exit(app.exec_())
 
 '''
 运行程序后，会显示一个表格，表格中的数据来自数据库中的employee表。双击某一行会触发lambda表达式中的print语句。 
