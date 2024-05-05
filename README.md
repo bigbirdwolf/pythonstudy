@@ -3000,6 +3000,105 @@ sys.exit(app.exec_())
 
 
 
+
+
+
+
+### QListView详细使用
+
+```python
+'''
+
+QListView控件使用示例
+
+'''
+
+import sys
+
+from PyQt5.QtCore import QStringListModel
+from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QListView, QPushButton, QMessageBox
+
+
+class ListViewTest(QWidget):
+    def __init__(self):
+        super(ListViewTest, self).__init__()
+        self.initUI()
+
+    def initUI(self):
+        self.setWindowTitle('QListView控件使用示例')
+        self.resize(400,300)
+
+        listView = QListView()
+        listModel = QStringListModel()
+        self.list = ['乔丹','科比','麦迪']
+
+        listModel.setStringList(self.list)
+        listView.setModel(listModel)
+
+        listView.clicked.connect(self.clicked)
+
+        vbox = QVBoxLayout()
+        vbox.addWidget(listView)
+        self.setLayout(vbox)
+
+    def clicked(self,item):
+        QMessageBox.information(self,'篮球明星','你选中了：'+self.list[item.row()])
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    main = ListViewTest()
+    main.show()
+    sys.exit(app.exec_())
+```
+
+
+
+#### QListWidget详细使用
+
+```python
+'''
+QListWidget 使用示例
+'''
+
+import sys
+from PyQt5.QtCore import QStringListModel
+from PyQt5.QtWidgets import (QApplication,QMainWindow,
+                             QWidget, QVBoxLayout,
+                             QHBoxLayout, QListView,
+                             QPushButton,
+                             QListWidget,
+                             QMessageBox)
+
+class ListWidgetTest(QMainWindow):
+    def __init__(self):
+        super(ListWidgetTest, self).__init__()
+        self.initUI()
+
+    def initUI(self):
+        self.setWindowTitle('QListWidget')
+        self.listWidget = QListWidget()
+        self.listWidget.addItem('科比')
+        self.listWidget.addItem('詹姆斯')
+        self.listWidget.addItem('库里')
+        self.listWidget.addItem('杜兰特')
+        self.listWidget.addItem('哈登')
+
+        self.listWidget.itemClicked.connect(self.clicked)
+
+        self.setCentralWidget(self.listWidget)
+
+    def clicked(self,index):
+        QMessageBox.information(self, 'QListWidget',
+                                '你选择了：' + self.listWidget.item(self.listWidget.row(index)).text())
+
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    main = ListWidgetTest()
+    main.show()
+    sys.exit(app.exec_())
+```
+
 ### QTableView详细使用
 
 ```python
@@ -3081,52 +3180,74 @@ if __name__ == '__main__':
 
 
 
+#### QTableWidget详细使用
 
-
-### QListView详细使用
-
-```python
+```
 '''
 
-QListView控件使用示例
+QTableWidget 使用示例
 
 '''
 
 import sys
-
-from PyQt5.QtCore import QStringListModel
-from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QListView, QPushButton, QMessageBox
-
-
-class ListViewTest(QWidget):
+from PyQt5.QtWidgets import (QWidget,QTableWidget,QAbstractItemView,
+                             QHBoxLayout,QTableWidgetItem,QVBoxLayout,QApplication)
+class TableWidgetTest(QWidget):
     def __init__(self):
-        super(ListViewTest, self).__init__()
+        super(TableWidgetTest,self).__init__()
         self.initUI()
 
     def initUI(self):
-        self.setWindowTitle('QListView控件使用示例')
-        self.resize(400,300)
+        self.setWindowTitle('QTableWidget')
+        self.resize(500,500)
+        layout = QHBoxLayout()
+        tablewidget = QTableWidget()
+        tablewidget.setRowCount(5)
+        tablewidget.setColumnCount(4)
 
-        listView = QListView()
-        listModel = QStringListModel()
-        self.list = ['乔丹','科比','麦迪']
+        layout.addWidget(tablewidget)
 
-        listModel.setStringList(self.list)
-        listView.setModel(listModel)
+        tablewidget.setHorizontalHeaderLabels(['姓名','性别','体重','身高'])
+        nameItem = QTableWidgetItem('张三')
+        sexItem = QTableWidgetItem('男')
+        weightItem = QTableWidgetItem('180')
+        heightItem = QTableWidgetItem('180')
 
-        listView.clicked.connect(self.clicked)
+        tablewidget.setItem(0,0,nameItem)
+        tablewidget.setItem(0,1,sexItem)
+        tablewidget.setItem(0,2,weightItem)
+        tablewidget.setItem(0,3,heightItem)
 
-        vbox = QVBoxLayout()
-        vbox.addWidget(listView)
-        self.setLayout(vbox)
+        #禁止编辑
+        tablewidget.setEditTriggers(QTableWidget.NoEditTriggers)
 
-    def clicked(self,item):
-        QMessageBox.information(self,'篮球明星','你选中了：'+self.list[item.row()])
+        #整行选中
+        tablewidget.setSelectionBehavior(QAbstractItemView.SelectRows)
+
+        #调整行和列
+        tablewidget.resizeRowsToContents()
+        tablewidget.resizeColumnsToContents()
+
+        #隐藏表头
+        tablewidget.horizontalHeader().setVisible(False)
+
+        #隐藏垂直头
+        tablewidget.verticalHeader().setVisible(False)
+
+        #隐藏表格线
+        tablewidget.setShowGrid(False)
+
+        self.setLayout(layout)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    main = ListViewTest()
+    main = TableWidgetTest()
     main.show()
     sys.exit(app.exec_())
 ```
 
+
+
+#### QTableView单元格中添加控件
+
+#### QTableView查找数据并定位
