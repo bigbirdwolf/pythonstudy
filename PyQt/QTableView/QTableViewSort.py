@@ -15,6 +15,8 @@ class QTableViewSortFilter(QAbstractItemView):
         self.InitUI()
 
     def InitUI(self):
+        self.setWindowTitle('QTableView 排序')
+        self.resize(800, 600)
         layout = QVBoxLayout()
         self.tableWidget = QTableWidget()
         self.tableWidget.setSortingEnabled(True)
