@@ -39,7 +39,6 @@ class MyWindow(QMainWindow):
         self.setCentralWidget(widget)
 
 
-
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     window = MyWindow()
