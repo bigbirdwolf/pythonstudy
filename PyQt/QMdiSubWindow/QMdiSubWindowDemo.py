@@ -7,6 +7,7 @@ import sys
 from PyQt5.QtWidgets import QApplication, QMainWindow, QAction, QMdiArea, QMdiSubWindow, QTextEdit
 from PyQt5.QtCore import Qt
 
+
 class MultiDocumentWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -32,7 +33,9 @@ class MultiDocumentWindow(QMainWindow):
         self.mdi.addSubWindow(sub)
         sub.show()
 
-app = QApplication(sys.argv)
-ex = MultiDocumentWindow()
-ex.show()
-sys.exit(app.exec_())
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    ex = MultiDocumentWindow()
+    ex.show()
+    sys.exit(app.exec_())
