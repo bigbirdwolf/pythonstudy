@@ -4263,16 +4263,16 @@ from PyQt5.QtCore import QThread, pyqtSignal
 from PyQt5.QtWidgets import QApplication, QLabel, QPushButton, QVBoxLayout, QWidget, QMessageBox
 
 sec = 0
+threadStatus = False
 
 class WorkThread(QThread):
     #创建一个信号，用于线程间通信
     startSignal = pyqtSignal()
     finishSignal = pyqtSignal()
-
     def run(self):
         while True:
             self.sleep(1)
-            if sec == 10:
+            if sec == 10 or threadStatus == False:
                 self.finishSignal.emit()
                 break
             self.startSignal.emit()
@@ -4300,13 +4300,16 @@ class MainWindow(QWidget):
         self.setLayout(self.layout)
 
     def start(self):
-
+        global threadStatus
+        threadStatus = True
         self.workThread.start()
         self.startBtn.setEnabled(False)
         self.stopBtn.setEnabled(True)
 
     def stop(self):
-        self.workThread.terminate()
+        # self.workThread.terminate()
+        global threadStatus
+        threadStatus = False
         self.startBtn.setEnabled(True)
         self.stopBtn.setEnabled(False)
 
@@ -4318,9 +4321,10 @@ class MainWindow(QWidget):
 
     def stopTimer(self):
         global sec
-        sec = 0
+        global threadStatus
         QMessageBox.information(self, '消息', '计数结束！')
         self.label.setText(str(sec))
+        threadStatus = False
         self.startBtn.setEnabled(True)
         self.stopBtn.setEnabled(False)
 
@@ -4330,6 +4334,7 @@ if __name__ == '__main__':
     mainWindow = MainWindow()
     mainWindow.show()
     app.exec_()
+
 ```
 
 
