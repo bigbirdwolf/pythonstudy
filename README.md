@@ -4337,5 +4337,637 @@ if __name__ == '__main__':
 
 ```
 
+### QWebEngineView使用示例
+
+有3种方式嵌入html
+
+```python
+import sys
+
+from PyQt5.QtCore import QUrl
+from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget
+from PyQt5.QtWebEngineWidgets import QWebEngineView
+from PyQt5.QtGui import *
+
+class WebEngineViewDemo(QMainWindow):
+    def __init__(self):
+        super().__init__()
+
+        self.setWindowTitle('QtWebEngineView Demo')
+        self.setGeometry(100, 100, 800, 600)
+
+        try:
+            # 创建一个 QWebEngineView 实例
+            webview = QWebEngineView()
+            webview.load(QUrl('https://www.example.com'))  # 1、加载网页
+            #url = os.getcwd() + '/index.html'
+            #webview.load(QUrl.fromLocalFile(url)) # 2、加载本地html文件
+            #webview.setHtml('''
+            <!DOCTYPE html>
+              <html lang="en">
+              <head>
+                  <meta charset="UTF-8">
+                  <title>Title</title>
+              </head>
+              <body>
+                  <h1>Hello World</h1>
+                  <p>This is a test page for QWebEngineWidget.</p>
+              </body>
+              </html>
+            ''') #3、直接加载html代码
+            self.setCentralWidget(webview)
+
+        except Exception as e:
+            print(e)
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    window = WebEngineViewDemo()
+    window.show()
+    sys.exit(app.exec_())
+```
+
+### PyQt5与javascript交互
+
+```python
+'''
+
+pyQt5中使用QWebEngineView加载网页，并调用JavaScript函数。
+
+'''
+import os
+import sys
+
+from PyQt5.QtCore import QUrl
+from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QPushButton
+from PyQt5.QtWebEngineWidgets import QWebEngineView
+from PyQt5.QtGui import *
+
+class QtCallJs(QWidget):
+    def __init__(self):
+        super().__init__()
+
+        self.setWindowTitle('QtWebEngineView Demo')
+        self.setGeometry(100, 100, 800, 600)
+        self.layout = QVBoxLayout()
+        self.setLayout(self.layout)
+        # 创建一个 QWebEngineView 实例
+        self.webview = QWebEngineView()
+        url = os.getcwd() + '/login.html'
+        self.webview.load(QUrl.fromLocalFile(url))  # 加载网页
+        self.layout.addWidget(self.webview)
+
+        button = QPushButton('调用JavaScript函数')
+        button.clicked.connect(self.callJavaScript)
+        self.layout.addWidget(button)
 
 
+    def js_callback(self, value):
+        print(value)
+    def callJavaScript(self):
+        self.value = 'Hello, PyQt5!'
+        self.webview.page().runJavaScript('login("' + self.value + '")', self.js_callback)  # 调用JavaScript函数
+
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    window = QtCallJs()
+    window.show()
+    sys.exit(app.exec_())
+```
+
+Login.html
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>登录页面</title>
+    <script>
+        function login(value) {
+
+            alert(value)
+            var username = document.getElementById("username").value;
+            var password = document.getElementById("password").value;
+            var token = username + ":" + password;
+            document.getElementById("token").value = token;
+            document.getElementById("token").style.display = "block";
+            return token;
+        }
+    </script>
+</head>
+<body>
+    <form>
+        <label for="username">用户名:</label>
+        <input type="text" id="username" name="username" required><br><br>
+        <label for="password">密  码:</label>
+        <input type="password" id="password" name="password" required><br><br>
+        <input type="text" id="token" name="token" style="display:none;">
+        <input type="submit" value="登录">
+    </form>
+</body>
+</html>
+```
+
+### PyQt中javascript调用python代码
+
+1、首先引用qwebchannel.js
+
+```js
+/****************************************************************************
+**
+** Copyright (C) 2015 The Qt Company Ltd.
+** Copyright (C) 2014 Klarälvdalens Datakonsult AB, a KDAB Group company, info@kdab.com, author Milian Wolff <milian.wolff@kdab.com>
+** Contact: http://www.qt.io/licensing/
+**
+** This file is part of the QtWebChannel module of the Qt Toolkit.
+**
+** $QT_BEGIN_LICENSE:LGPL21$
+** Commercial License Usage
+** Licensees holding valid commercial Qt licenses may use this file in
+** accordance with the commercial license agreement provided with the
+** Software or, alternatively, in accordance with the terms contained in
+** a written agreement between you and The Qt Company. For licensing terms
+** and conditions see http://www.qt.io/terms-conditions. For further
+** information use the contact form at http://www.qt.io/contact-us.
+**
+** GNU Lesser General Public License Usage
+** Alternatively, this file may be used under the terms of the GNU Lesser
+** General Public License version 2.1 or version 3 as published by the Free
+** Software Foundation and appearing in the file LICENSE.LGPLv21 and
+** LICENSE.LGPLv3 included in the packaging of this file. Please review the
+** following information to ensure the GNU Lesser General Public License
+** requirements will be met: https://www.gnu.org/licenses/lgpl.html and
+** http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html.
+**
+** As a special exception, The Qt Company gives you certain additional
+** rights. These rights are described in The Qt Company LGPL Exception
+** version 1.1, included in the file LGPL_EXCEPTION.txt in this package.
+**
+** $QT_END_LICENSE$
+**
+****************************************************************************/
+
+"use strict";
+
+var QWebChannelMessageTypes = {
+    signal: 1,
+    propertyUpdate: 2,
+    init: 3,
+    idle: 4,
+    debug: 5,
+    invokeMethod: 6,
+    connectToSignal: 7,
+    disconnectFromSignal: 8,
+    setProperty: 9,
+    response: 10,
+};
+
+var QWebChannel = function(transport, initCallback)
+{
+    if (typeof transport !== "object" || typeof transport.send !== "function") {
+        console.error("The QWebChannel expects a transport object with a send function and onmessage callback property." +
+                      " Given is: transport: " + typeof(transport) + ", transport.send: " + typeof(transport.send));
+        return;
+    }
+
+    var channel = this;
+    this.transport = transport;
+
+    this.send = function(data)
+    {
+        if (typeof(data) !== "string") {
+            data = JSON.stringify(data);
+        }
+        channel.transport.send(data);
+    }
+
+    this.transport.onmessage = function(message)
+    {
+        var data = message.data;
+        if (typeof data === "string") {
+            data = JSON.parse(data);
+        }
+        switch (data.type) {
+            case QWebChannelMessageTypes.signal:
+                channel.handleSignal(data);
+                break;
+            case QWebChannelMessageTypes.response:
+                channel.handleResponse(data);
+                break;
+            case QWebChannelMessageTypes.propertyUpdate:
+                channel.handlePropertyUpdate(data);
+                break;
+            default:
+                console.error("invalid message received:", message.data);
+                break;
+        }
+    }
+
+    this.execCallbacks = {};
+    this.execId = 0;
+    this.exec = function(data, callback)
+    {
+        if (!callback) {
+            // if no callback is given, send directly
+            channel.send(data);
+            return;
+        }
+        if (channel.execId === Number.MAX_VALUE) {
+            // wrap
+            channel.execId = Number.MIN_VALUE;
+        }
+        if (data.hasOwnProperty("id")) {
+            console.error("Cannot exec message with property id: " + JSON.stringify(data));
+            return;
+        }
+        data.id = channel.execId++;
+        channel.execCallbacks[data.id] = callback;
+        channel.send(data);
+    };
+
+    this.objects = {};
+
+    this.handleSignal = function(message)
+    {
+        var object = channel.objects[message.object];
+        if (object) {
+            object.signalEmitted(message.signal, message.args);
+        } else {
+            console.warn("Unhandled signal: " + message.object + "::" + message.signal);
+        }
+    }
+
+    this.handleResponse = function(message)
+    {
+        if (!message.hasOwnProperty("id")) {
+            console.error("Invalid response message received: ", JSON.stringify(message));
+            return;
+        }
+        channel.execCallbacks[message.id](message.data);
+        delete channel.execCallbacks[message.id];
+    }
+
+    this.handlePropertyUpdate = function(message)
+    {
+        for (var i in message.data) {
+            var data = message.data[i];
+            var object = channel.objects[data.object];
+            if (object) {
+                object.propertyUpdate(data.signals, data.properties);
+            } else {
+                console.warn("Unhandled property update: " + data.object + "::" + data.signal);
+            }
+        }
+        channel.exec({type: QWebChannelMessageTypes.idle});
+    }
+
+    this.debug = function(message)
+    {
+        channel.send({type: QWebChannelMessageTypes.debug, data: message});
+    };
+
+    channel.exec({type: QWebChannelMessageTypes.init}, function(data) {
+        for (var objectName in data) {
+            var object = new QObject(objectName, data[objectName], channel);
+        }
+        // now unwrap properties, which might reference other registered objects
+        for (var objectName in channel.objects) {
+            channel.objects[objectName].unwrapProperties();
+        }
+        if (initCallback) {
+            initCallback(channel);
+        }
+        channel.exec({type: QWebChannelMessageTypes.idle});
+    });
+};
+
+function QObject(name, data, webChannel)
+{
+    this.__id__ = name;
+    webChannel.objects[name] = this;
+
+    // List of callbacks that get invoked upon signal emission
+    this.__objectSignals__ = {};
+
+    // Cache of all properties, updated when a notify signal is emitted
+    this.__propertyCache__ = {};
+
+    var object = this;
+
+    // ----------------------------------------------------------------------
+
+    this.unwrapQObject = function(response)
+    {
+        if (response instanceof Array) {
+            // support list of objects
+            var ret = new Array(response.length);
+            for (var i = 0; i < response.length; ++i) {
+                ret[i] = object.unwrapQObject(response[i]);
+            }
+            return ret;
+        }
+        if (!response
+            || !response["__QObject*__"]
+            || response.id === undefined) {
+            return response;
+        }
+
+        var objectId = response.id;
+        if (webChannel.objects[objectId])
+            return webChannel.objects[objectId];
+
+        if (!response.data) {
+            console.error("Cannot unwrap unknown QObject " + objectId + " without data.");
+            return;
+        }
+
+        var qObject = new QObject( objectId, response.data, webChannel );
+        qObject.destroyed.connect(function() {
+            if (webChannel.objects[objectId] === qObject) {
+                delete webChannel.objects[objectId];
+                // reset the now deleted QObject to an empty {} object
+                // just assigning {} though would not have the desired effect, but the
+                // below also ensures all external references will see the empty map
+                // NOTE: this detour is necessary to workaround QTBUG-40021
+                var propertyNames = [];
+                for (var propertyName in qObject) {
+                    propertyNames.push(propertyName);
+                }
+                for (var idx in propertyNames) {
+                    delete qObject[propertyNames[idx]];
+                }
+            }
+        });
+        // here we are already initialized, and thus must directly unwrap the properties
+        qObject.unwrapProperties();
+        return qObject;
+    }
+
+    this.unwrapProperties = function()
+    {
+        for (var propertyIdx in object.__propertyCache__) {
+            object.__propertyCache__[propertyIdx] = object.unwrapQObject(object.__propertyCache__[propertyIdx]);
+        }
+    }
+
+    function addSignal(signalData, isPropertyNotifySignal)
+    {
+        var signalName = signalData[0];
+        var signalIndex = signalData[1];
+        object[signalName] = {
+            connect: function(callback) {
+                if (typeof(callback) !== "function") {
+                    console.error("Bad callback given to connect to signal " + signalName);
+                    return;
+                }
+
+                object.__objectSignals__[signalIndex] = object.__objectSignals__[signalIndex] || [];
+                object.__objectSignals__[signalIndex].push(callback);
+
+                if (!isPropertyNotifySignal && signalName !== "destroyed") {
+                    // only required for "pure" signals, handled separately for properties in propertyUpdate
+                    // also note that we always get notified about the destroyed signal
+                    webChannel.exec({
+                        type: QWebChannelMessageTypes.connectToSignal,
+                        object: object.__id__,
+                        signal: signalIndex
+                    });
+                }
+            },
+            disconnect: function(callback) {
+                if (typeof(callback) !== "function") {
+                    console.error("Bad callback given to disconnect from signal " + signalName);
+                    return;
+                }
+                object.__objectSignals__[signalIndex] = object.__objectSignals__[signalIndex] || [];
+                var idx = object.__objectSignals__[signalIndex].indexOf(callback);
+                if (idx === -1) {
+                    console.error("Cannot find connection of signal " + signalName + " to " + callback.name);
+                    return;
+                }
+                object.__objectSignals__[signalIndex].splice(idx, 1);
+                if (!isPropertyNotifySignal && object.__objectSignals__[signalIndex].length === 0) {
+                    // only required for "pure" signals, handled separately for properties in propertyUpdate
+                    webChannel.exec({
+                        type: QWebChannelMessageTypes.disconnectFromSignal,
+                        object: object.__id__,
+                        signal: signalIndex
+                    });
+                }
+            }
+        };
+    }
+
+    /**
+     * Invokes all callbacks for the given signalname. Also works for property notify callbacks.
+     */
+    function invokeSignalCallbacks(signalName, signalArgs)
+    {
+        var connections = object.__objectSignals__[signalName];
+        if (connections) {
+            connections.forEach(function(callback) {
+                callback.apply(callback, signalArgs);
+            });
+        }
+    }
+
+    this.propertyUpdate = function(signals, propertyMap)
+    {
+        // update property cache
+        for (var propertyIndex in propertyMap) {
+            var propertyValue = propertyMap[propertyIndex];
+            object.__propertyCache__[propertyIndex] = propertyValue;
+        }
+
+        for (var signalName in signals) {
+            // Invoke all callbacks, as signalEmitted() does not. This ensures the
+            // property cache is updated before the callbacks are invoked.
+            invokeSignalCallbacks(signalName, signals[signalName]);
+        }
+    }
+
+    this.signalEmitted = function(signalName, signalArgs)
+    {
+        invokeSignalCallbacks(signalName, signalArgs);
+    }
+
+    function addMethod(methodData)
+    {
+        var methodName = methodData[0];
+        var methodIdx = methodData[1];
+        object[methodName] = function() {
+            var args = [];
+            var callback;
+            for (var i = 0; i < arguments.length; ++i) {
+                if (typeof arguments[i] === "function")
+                    callback = arguments[i];
+                else
+                    args.push(arguments[i]);
+            }
+
+            webChannel.exec({
+                "type": QWebChannelMessageTypes.invokeMethod,
+                "object": object.__id__,
+                "method": methodIdx,
+                "args": args
+            }, function(response) {
+                if (response !== undefined) {
+                    var result = object.unwrapQObject(response);
+                    if (callback) {
+                        (callback)(result);
+                    }
+                }
+            });
+        };
+    }
+
+    function bindGetterSetter(propertyInfo)
+    {
+        var propertyIndex = propertyInfo[0];
+        var propertyName = propertyInfo[1];
+        var notifySignalData = propertyInfo[2];
+        // initialize property cache with current value
+        // NOTE: if this is an object, it is not directly unwrapped as it might
+        // reference other QObject that we do not know yet
+        object.__propertyCache__[propertyIndex] = propertyInfo[3];
+
+        if (notifySignalData) {
+            if (notifySignalData[0] === 1) {
+                // signal name is optimized away, reconstruct the actual name
+                notifySignalData[0] = propertyName + "Changed";
+            }
+            addSignal(notifySignalData, true);
+        }
+
+        Object.defineProperty(object, propertyName, {
+            configurable: true,
+            get: function () {
+                var propertyValue = object.__propertyCache__[propertyIndex];
+                if (propertyValue === undefined) {
+                    // This shouldn't happen
+                    console.warn("Undefined value in property cache for property \"" + propertyName + "\" in object " + object.__id__);
+                }
+
+                return propertyValue;
+            },
+            set: function(value) {
+                if (value === undefined) {
+                    console.warn("Property setter for " + propertyName + " called with undefined value!");
+                    return;
+                }
+                object.__propertyCache__[propertyIndex] = value;
+                webChannel.exec({
+                    "type": QWebChannelMessageTypes.setProperty,
+                    "object": object.__id__,
+                    "property": propertyIndex,
+                    "value": value
+                });
+            }
+        });
+
+    }
+
+    // ----------------------------------------------------------------------
+
+    data.methods.forEach(addMethod);
+
+    data.properties.forEach(bindGetterSetter);
+
+    data.signals.forEach(function(signal) { addSignal(signal, false); });
+
+    for (var name in data.enums) {
+        object[name] = data.enums[name];
+    }
+}
+
+//required for use with nodejs
+if (typeof module === 'object') {
+    module.exports = {
+        QWebChannel: QWebChannel
+    };
+}
+```
+
+2、创建Html文件jieceng.html，在html文件中引用qwebchannel.js,编写js代码：
+
+```js
+//可以是固定个是,接收python对象，将对象添加在window中
+document.addEventListener("DOMContentLoaded", function() {
+    new QWebChannel(qt.webChannelTransport, function (channel) {
+        window.obj = channel.objects.obj;
+    });
+});
+```
+
+3、在html文件中创建方法调用接收的python对象:
+
+```javascript
+function calPythonFunction() {
+   if(window.obj){
+       var n = parseInt(document.getElementById("input").value)
+       window.obj.calculate(n,callback) //调用python对象中的方法并传递参数和回调函数
+   }
+};
+ function callback(result) { //回调函数接收python方法的返回值
+       alert(result);
+ }
+```
+
+4、创建一个python类:
+
+```python
+#计算阶乘
+from PyQt5.QtCore import *
+class Factorial(QObject):
+    @pyqtSlot(int, result=int)
+    def calculate(self, n):
+        if n < 0:
+            return None
+        elif n == 0:
+            return 1
+        else:
+            return n * self.calculate(n-1)
+```
+
+5、创建pythonQt界面
+
+```python
+import os
+import sys
+
+from PyQt5.QtCore import QUrl
+from PyQt5.QtWebChannel import QWebChannel
+from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget
+from PyQt5.QtWebEngineWidgets import QWebEngineView
+from PyQt5.QtGui import *
+from factorial import *
+
+channel = QWebChannel() #实例化一个全局的channel对象
+factorial = Factorial() #实例化一个全局的自定义对象，供javascript调用
+class PyJieCeng(QMainWindow):
+    def __init__(self):
+        super().__init__()
+
+        self.setWindowTitle('javascript调用python方法')
+        self.setGeometry(100, 100, 800, 600)
+        url = os.getcwd() + '/jieceng.html'
+
+        # 创建一个 QWebEngineView 实例
+        webview = QWebEngineView()
+        webview.load(QUrl.fromLocalFile(url))  # 加载本地html
+
+
+        # 向网页传递 Python 对象
+        channel.registerObject('obj', factorial)
+        webview.page().setWebChannel(channel)  # 向网页注册 channel
+        self.setCentralWidget(webview)
+
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    window = PyJieCeng()
+    window.show()
+    sys.exit(app.exec_())
+```

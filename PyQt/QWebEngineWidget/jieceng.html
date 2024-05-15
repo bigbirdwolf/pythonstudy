@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src=" ./qwebchannel.js"></script>
+    <script>
+
+        function callback(result) {
+            alert(result);
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            new QWebChannel(qt.webChannelTransport, function (channel) {
+                window.obj = channel.objects.obj;
+            });
+        });
+        function search() {
+           if(window.obj){
+               var n = parseInt(document.getElementById("input").value)
+               window.obj.calculate(n,callback)
+           }
+        };
+    </script>
+</head>
+<body>
+<form>
+    <input type="text" id="input"></br>
+    <button type="button" onclick="search()">计算阶乘</button>
+</form>
+</body>
+</html>

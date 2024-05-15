@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>登录页面</title>
+    <script>
+        function login(value) {
+
+            alert(value)
+            var username = document.getElementById("username").value;
+            var password = document.getElementById("password").value;
+            var token = username + ":" + password;
+            document.getElementById("token").value = token;
+            document.getElementById("token").style.display = "block";
+            return token;
+        }
+    </script>
+</head>
+<body>
+    <form>
+        <label for="username">用户名:</label>
+        <input type="text" id="username" name="username" required><br><br>
+        <label for="password">密  码:</label>
+        <input type="password" id="password" name="password" required><br><br>
+        <input type="text" id="token" name="token" style="display:none;">
+        <input type="submit" value="登录">
+    </form>
+</body>
+</html>
